@@ -8,7 +8,7 @@ FROM jupyter/minimal-notebook:latest
 # install linux packages that we require for systems classes
 USER root
 RUN apt-get -y update 
-RUN apt-get -y install texinfo libncurses-dev ssh emacs-nox
+RUN apt-get -y install texinfo libncurses-dev ssh emacs-nox cc65 bsdmainutils
 RUN cd /tmp && wget http://ftp.gnu.org/gnu/gdb/gdb-10.2.tar.gz && tar -zxf gdb-10.2.tar.gz && cd gdb-10.2 && ./configure --prefix /usr/local --enable-tui=yes && make -j 4 && make install
 RUN cd /tmp && rm -rf gdb-10.2 && rm gdb-10.2.tar.gz
  
@@ -28,4 +28,15 @@ RUN conda install rise --no-deps --yes
 # Add Bash kernel 
 RUN conda install -c conda-forge bash_kernel 
 
+# Add jupyter-book development support
+RUN pip install -U jupyter-book
+
+# As per jupyter book instructions for interactive support
+RUN pip install jupytext nbgitpuller
+
+# add gh-import to make file easier for publishing books to github io
+USER root
+RUN apt install ghp-import
+
+USER $NB_USER
 
