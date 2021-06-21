@@ -38,5 +38,9 @@ RUN pip install jupytext nbgitpuller
 USER root
 RUN apt install ghp-import
 
+# another thing I found that was missing -- standard unix file command
+RUN apt install file
 USER $NB_USER
 
+# add multi language notebook support
+RUN pip install jupyterlab-sos

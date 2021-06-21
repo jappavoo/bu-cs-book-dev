@@ -21,3 +21,9 @@ dev: DARGS?=-e JUPYTER_ENABLE_LAB=yes -v "${HOME}":/home/jovyan/work
 dev: PORT?=8888
 dev: ## Make a container from a tagged image image
 	docker run -it --rm -p $(PORT):8888 $(DARGS) $(IMAGE):$(TAG) $(ARGS)
+
+devnb: ARGS?=
+devnb: DARGS?=-v "${HOME}":/home/jovyan/work
+devnb: PORT?=8888
+devnb: ## Make a container from a tagged image image
+	docker run -it --rm -p $(PORT):8888 $(DARGS) $(IMAGE):$(TAG) $(ARGS) 
