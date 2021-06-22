@@ -36,10 +36,16 @@ RUN pip install jupytext nbgitpuller
 
 # add gh-import to make file easier for publishing books to github io
 USER root
-RUN apt install ghp-import
+RUN apt -y install ghp-import
 
 # another thing I found that was missing -- standard unix file command
-RUN apt install file
+RUN apt -y install file
+
+# missing man pages
+RUN apt -y install man-db manpages-posix manpages-dev manpages-posix-dev
+
+# switch back to notebook user
+
 USER $NB_USER
 
 # add multi language notebook support
