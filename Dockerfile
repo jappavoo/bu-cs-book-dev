@@ -8,7 +8,22 @@ FROM jupyter/minimal-notebook:latest
 # install linux packages that we require for systems classes
 USER root
 RUN apt-get -y update 
-RUN apt-get -y install texinfo libncurses-dev ssh emacs-nox cc65 bsdmainutils
+
+# minimal-notebook no longer inludes compiler and other tools we we install them and some other standard unix develpment tools
+#  stuff for gdb texinfo libncurses 
+#  ssh 
+#  emacs
+#  6502 tool chain -- includes C compiler, assembler and a linker
+#  ghp-import to make publishing of html to github easier
+#  file utility -- guesses the type of content in a file -- standard unix tool
+#  man pages
+#  find 
+RUN apt-get -y install build-essential texinfo libncurses-dev ssh emacs-nox cc65 bsdmainutils ghp-import file man-db manpages-posix manpages-dev manpages-posix-dev findutils
+
+# we want the container to feel more like a fully fledged system so we are pulling the trigger and unminimizing it
+RUN unminimize
+
+# get and build gdb form source so that we have a current version >10 that support more advanced tui functionality 
 RUN cd /tmp && wget http://ftp.gnu.org/gnu/gdb/gdb-10.2.tar.gz && tar -zxf gdb-10.2.tar.gz && cd gdb-10.2 && ./configure --prefix /usr/local --enable-tui=yes && make -j 4 && make install
 RUN cd /tmp && rm -rf gdb-10.2 && rm gdb-10.2.tar.gz
  
@@ -32,21 +47,13 @@ RUN conda install -c conda-forge bash_kernel
 RUN pip install -U jupyter-book
 
 # As per jupyter book instructions for interactive support
-RUN pip install jupytext nbgitpuller
+RUN pip install -U jupytext nbgitpuller
 
-# add gh-import to make file easier for publishing books to github io
-USER root
-RUN apt -y install ghp-import
+# added matplotlib
+RUN pip install -U matplotlib
 
-# another thing I found that was missing -- standard unix file command
-RUN apt -y install file
+# adding spell checker
+RUN pip install -U jupyter_contrib_nbextensions
+RUN jupyter contrib nbextension install --user
+RUN jupyter nbextension enable spellchecker/main
 
-# missing man pages
-RUN apt -y install man-db manpages-posix manpages-dev manpages-posix-dev
-
-# switch back to notebook user
-
-USER $NB_USER
-
-# add multi language notebook support
-RUN pip install jupyterlab-sos
