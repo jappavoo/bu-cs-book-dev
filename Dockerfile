@@ -11,13 +11,14 @@ RUN apt-get -y update
 
 # minimal-notebook no longer inludes compiler and other tools we we install them and some other standard unix develpment tools
 #  stuff for gdb texinfo libncurses 
-#  ssh 
+#  ssh
+#  vim 
 #  emacs
 #  6502 tool chain -- includes C compiler, assembler and a linker
 #  file utility -- guesses the type of content in a file -- standard unix tool
 #  man pages
 #  find 
-RUN apt-get -y install build-essential texinfo libncurses-dev ssh emacs-nox cc65 bsdmainutils file man-db manpages-posix manpages-dev manpages-posix-dev findutils
+RUN apt-get -y install build-essential texinfo libncurses-dev vim ssh emacs-nox cc65 bsdmainutils file man-db manpages-posix manpages-dev manpages-posix-dev findutils
 
 # get and build gdb form source so that we have a current version >10 that support more advanced tui functionality 
 RUN cd /tmp && wget http://ftp.gnu.org/gnu/gdb/gdb-10.2.tar.gz && tar -zxf gdb-10.2.tar.gz && cd gdb-10.2 && ./configure --prefix /usr/local --enable-tui=yes && make -j 4 && make install
@@ -40,21 +41,44 @@ RUN conda install rise --no-deps --yes
 RUN conda install -c conda-forge bash_kernel 
 
 # Add jupyter-book development support
-RUN pip install -U jupyter-book
+RUN conda install -c conda-forge jupyter-book 
 
 # Add ghp-import so that we can publish books to github easily
-RUN pip install -U ghp-import
+RUN conda install -c conda-forge ghp-import
 
 # As per jupyter book instructions for interactive support
-RUN pip install -U jupytext nbgitpuller
+RUN conda install jupytext -c conda-forge
+RUN conda install -c conda-forge nbgitpuller 
+
+# ipywidgets not sure if this is already included but install
+RUN conda install -c conda-forge widgetsnbextension
+RUN conda install -c anaconda ipywidgets 
+#RUN jupyter nbextension enable --py widgetsnbextension
 
 # added matplotlib
-RUN pip install -U matplotlib
+RUN conda install -c conda-forge matplotlib 
 
-# adding spell checker
-RUN pip install -U jupyter_contrib_nbextensions
-RUN jupyter contrib nbextension install --user
+# added pandas
+RUN conda install -c anaconda pandas
+
+# added plotly express
+RUN conda install -c plotly plotly_express
+
+
+# enable classic notebook nbextensions
+RUN conda install -c conda-forge jupyter_contrib_nbextensions
+
+# turn on spellchecker extension
 RUN jupyter nbextension enable spellchecker/main
+
+# enable split cell
+RUN jupyter nbextension enable splitcell/splitcell
+
+# enable hide-all
+RUN jupyter nbextension enable hide_input_all/main
+
+# enable hide
+RUN jupyter nbextension enable hide_input/main 
 
 USER root
 # we want the container to feel more like a fully fledged system so we are pulling the trigger and unminimizing it

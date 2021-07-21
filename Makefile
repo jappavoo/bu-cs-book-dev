@@ -15,6 +15,10 @@ build: DARGS?=
 build: ## Make the latest build of the image
 	docker build $(DARGS) --rm --force-rm -t $(IMAGE):$(TAG) .
 
+push: DARGS?=
+push: ## push latest container image to dockerhub
+	docker push $(IMAGE):$(TAG)
+
 #docker run --rm -e JUPYTER_ENABLE_LAB=yes -p 8888:8888 -v "${HOME}":/home/jovyan/work  jappavoo/bu-cs-book-dev:latest
 dev: ARGS?=
 dev: DARGS?=-e JUPYTER_ENABLE_LAB=yes -v "${HOME}":/home/jovyan/work
