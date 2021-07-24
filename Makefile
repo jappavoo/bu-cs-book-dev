@@ -19,6 +19,11 @@ push: DARGS?=
 push: ## push latest container image to dockerhub
 	docker push $(IMAGE):$(TAG)
 
+root: ARGS?=/bin/bash
+root: DARGS?=-u 0
+root: ## start container with root shell to do admin and poke around
+	docker run -it --rm $(DARGS) $(IMAGE):$(TAG) $(ARGS)
+
 #docker run --rm -e JUPYTER_ENABLE_LAB=yes -p 8888:8888 -v "${HOME}":/home/jovyan/work  jappavoo/bu-cs-book-dev:latest
 dev: ARGS?=
 dev: DARGS?=-e JUPYTER_ENABLE_LAB=yes -v "${HOME}":/home/jovyan/work

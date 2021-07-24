@@ -84,5 +84,10 @@ USER root
 # we want the container to feel more like a fully fledged system so we are pulling the trigger and unminimizing it
 RUN yes | unminimize || true
 
+# as a hack we are going to try changing group id of /home/joyvan to be root to see if I can trick things into
+# working on the moc
+RUN chgrp -R root /home/jovyan
+
 USER $NB_USER
+
 
