@@ -1,28 +1,9 @@
-FROM jupyter/minimal-notebook:latest
+FROM jappavoo/bu-cs-book-dev-base-unmin:latest
 
 # Add RUN statements to install packages as the $NB_USER defined in the base images.
 
 # Add a "USER root" statement followed by RUN statements to install system packages using apt-get,
 # change file permissions, etc.
-
-# install linux packages that we require for systems classes
-USER root
-RUN apt-get -y update 
-
-# minimal-notebook no longer inludes compiler and other tools we we install them and some other standard unix develpment tools
-#  stuff for gdb texinfo libncurses 
-#  ssh
-#  vim 
-#  emacs
-#  6502 tool chain -- includes C compiler, assembler and a linker
-#  file utility -- guesses the type of content in a file -- standard unix tool
-#  man pages
-#  find 
-RUN apt-get -y install build-essential texinfo libncurses-dev vim ssh emacs-nox cc65 bsdmainutils file man-db manpages-posix manpages-dev manpages-posix-dev findutils
-
-# get and build gdb form source so that we have a current version >10 that support more advanced tui functionality 
-RUN cd /tmp && wget http://ftp.gnu.org/gnu/gdb/gdb-10.2.tar.gz && tar -zxf gdb-10.2.tar.gz && cd gdb-10.2 && ./configure --prefix /usr/local --enable-tui=yes && make -j 4 && make install
-RUN cd /tmp && rm -rf gdb-10.2 && rm gdb-10.2.tar.gz
  
 USER $NB_USER
 
@@ -32,56 +13,70 @@ USER $NB_USER
 # The conda-forge channel is already present in the system .condarc file, so there is no need to
 # add a channel invocation in any of the next commands.
 
-# Add RISE 5.4.1 to the mix as well so user can show live slideshows from their notebooks
+# Each of these was tested by hand on the bu-cs-book-dev-unmin
+# Add RISE to the mix as well so user can show live slideshows from their notebooks
 # More info at https://rise.readthedocs.io
 # Note: Installing RISE with --no-deps because all the neeeded deps are already present.
-#RUN conda install rise --no-deps --yes
-RUN pip install -U RISE
+# # last known version: rise-5.7.1  
+RUN conda install rise --yes
 
 # Add Bash kernel 
-#RUN conda install -c conda-forge bash_kernel 
-RUN pip install --upgrade bash_kernel
+# from https://github.com/takluyver/bash_kernel
+# last known version: bash-kernel-0.7.2
+RUN pip install bash_kernel
 RUN python -m bash_kernel.install
 
 # Add jupyter-book development support
-#RUN conda install -c conda-forge jupyter-book 
-RUN pip install --upgrade jupyter-book
+# needed to use pip to get the right version
+# last known version: jupyter-book-0.11.2 
+RUN pip install jupyter-book
 
 # Add ghp-import so that we can publish books to github easily
-#RUN conda install -c conda-forge ghp-import
-RUN pip install --upgrade ghp-import
+# https://pypi.org/project/ghp-import/
+# ghp-import-2.0.1
+RUN pip install ghp-import
 
 # As per jupyter book instructions for interactive support
-#RUN conda install jupytext -c conda-forge
-RUN pip install --upgrade jupytext 
+# jupyter-book requires an older version of jupyter-book
+# conda seems to do the right thing
+# jupytext                  1.10.3  
+RUN conda install jupytext --yes
 
-#RUN conda install -c conda-forge nbgitpuller 
-RUN pip install --upgrade nbgitpuller
+#RUN conda install -c conda-forge nbgitpuller
+# https://github.com/jupyterhub/nbgitpuller
+# nbgitpuller-0.10.1
+RUN pip install nbgitpuller
 
 # enable classic notebook nbextensions
-#RUN conda install -c conda-forge jupyter_contrib_nbextensions
-RUN pip install --upgrade jupyter_contrib_nbextensions
-RUN jupyter contrib nbextension install --user
+# https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/install.html
+# jupyter_contrib_nbextensions 0.5.1
+RUN conda install jupyter_contrib_nbextensions --yes
+
 
 # ipywidgets not sure if this is already included but install
-#RUN conda install -c conda-forge widgetsnbextension
-RUN pip install --upgrade widgetsnbextension
-#RUN conda install -c anaconda ipywidgets 
-RUN pip install --upgrade ipywidgets
+# widgetsnbextension        3.5.1
+RUN conda install widgetsnbextension --yes
+# ipywidgets                7.6.3
+RUN conda install ipywidgets --yes
 RUN jupyter nbextension enable --py widgetsnbextension
 
 # added matplotlib
-#RUN conda install -c conda-forge matplotlib 
-RUN pip install --upgrade matplotlib
+# https://matplotlib.org/stable/users/installing.html
+# matplotlib                3.4.2  
+RUN pip install -U matplotlib
 
 # added pandas
-#RUN conda install -c anaconda pandas
-RUN pip install --upgrade pandas
+# https://pandas.pydata.org/pandas-docs/stable/getting_started/install.html
+# pandas-1.3.1
+RUN pip install pandas
 
 # added plotly express
-#RUN conda install -c plotly plotly_express
-RUN pip install --upgrade plotly
-RUN pip install --upgrade plotly_express
+# https://plotly.com/python/getting-started/
+# plotly-5.1.0
+RUN pip install plotly
+# https://pypi.org/project/plotly-express/
+# plotly-express-0.4.1 
+RUN pip install plotly_express
 
 # turn on spellchecker extension
 RUN jupyter nbextension enable spellchecker/main
