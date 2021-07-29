@@ -41,7 +41,8 @@ RUN conda install rise --no-deps --yes
 RUN conda install -c conda-forge bash_kernel 
 
 # Add jupyter-book development support
-RUN conda install -c conda-forge jupyter-book 
+#RUN conda install -c conda-forge jupyter-book 
+RUN pip install jupyter-book
 
 # Add ghp-import so that we can publish books to github easily
 RUN conda install -c conda-forge ghp-import
@@ -90,4 +91,15 @@ RUN chgrp -R root /home/jovyan
 
 USER $NB_USER
 
+# turn off login messages and suppress sudo group check in /etc/bash.bashrc
+# was causing unnecessary error messages due to gid not in /etc/groups on operate-first
+RUN touch ~/.hushlogin
 
+# use a short prompt to improve default behaviour in presentations
+RUN echo "export PS1='\$ '" >> ~/.bashrc
+
+# work around bug when term is xterm and emacs runs in xterm.js -- causes escape characters in file
+RUN echo "export TERM=linux" >> ~/.bashrc
+ 
+# finally remove default working directory from joyvan home
+RUN rmdir ~/work
