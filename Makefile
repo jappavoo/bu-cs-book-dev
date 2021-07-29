@@ -6,6 +6,8 @@ IMAGE:=jappavoo/bu-cs-book-dev
 TAG?=latest
 # Shell that make should use
 SHELL:=bash
+# force no caching for docker builds
+#DCACHING=--no-cache
 
 help:
 # http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
@@ -15,7 +17,7 @@ help:
 base-build: DARGS?=
 base-build: INAME=$(IMAGE)-base
 base-build: ## Make the base image
-	docker build $(DARGS) --no-cache --rm --force-rm -t $(INAME):$(TAG) base
+	docker build $(DARGS) $(DCACHING) --rm --force-rm -t $(INAME):$(TAG) base
 
 base-push: DARGS?=
 base-push: INAME?=$(IMAGE)-base
@@ -51,7 +53,7 @@ base-nb: ## start a jupyter classic notebook server container instance
 base-unmin-build: DARGS?=
 base-unmin-build: INAME=$(IMAGE)-base-unmin
 base-unmin-build: ## Make the base-unmin image
-	docker build $(DARGS) --no-cache --rm --force-rm -t $(INAME):$(TAG) base-unmin
+	docker build $(DARGS) $(DCACHING) --rm --force-rm -t $(INAME):$(TAG) base-unmin
 
 base-unmin-push: DARGS?=
 base-unmin-push: INAME?=$(IMAGE)-base-unmin
@@ -86,7 +88,7 @@ base-unmin-nb: ## start a jupyter classic notebook server container instance
 
 build: DARGS?=
 build: ## Make the latest build of the image
-	docker build $(DARGS) --no-cache --rm --force-rm -t $(IMAGE):$(TAG) .
+	docker build $(DARGS) $(DCACHING) --rm --force-rm -t $(IMAGE):$(TAG) .
 
 push: DARGS?=
 push: ## push latest container image to dockerhub

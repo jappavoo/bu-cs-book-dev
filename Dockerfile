@@ -1,9 +1,4 @@
 FROM jappavoo/bu-cs-book-dev-base-unmin:latest
-
-# Add RUN statements to install packages as the $NB_USER defined in the base images.
-
-# Add a "USER root" statement followed by RUN statements to install system packages using apt-get,
-# change file permissions, etc.
  
 USER $NB_USER
 
@@ -13,70 +8,42 @@ USER $NB_USER
 # The conda-forge channel is already present in the system .condarc file, so there is no need to
 # add a channel invocation in any of the next commands.
 
-# Each of these was tested by hand on the bu-cs-book-dev-unmin
-# Add RISE to the mix as well so user can show live slideshows from their notebooks
+# Add RISE 5.4.1 to the mix as well so user can show live slideshows from their notebooks
 # More info at https://rise.readthedocs.io
 # Note: Installing RISE with --no-deps because all the neeeded deps are already present.
-# # last known version: rise-5.7.1  
-RUN conda install rise --yes
+RUN conda install rise --no-deps --yes
 
 # Add Bash kernel 
-# from https://github.com/takluyver/bash_kernel
-# last known version: bash-kernel-0.7.2
-RUN pip install bash_kernel
-RUN python -m bash_kernel.install
+RUN conda install -c conda-forge bash_kernel 
 
 # Add jupyter-book development support
-# needed to use pip to get the right version
-# last known version: jupyter-book-0.11.2 
+#RUN conda install -c conda-forge jupyter-book 
 RUN pip install jupyter-book
 
 # Add ghp-import so that we can publish books to github easily
-# https://pypi.org/project/ghp-import/
-# ghp-import-2.0.1
-RUN pip install ghp-import
+RUN conda install -c conda-forge ghp-import
 
 # As per jupyter book instructions for interactive support
-# jupyter-book requires an older version of jupyter-book
-# conda seems to do the right thing
-# jupytext                  1.10.3  
-RUN conda install jupytext --yes
-
-#RUN conda install -c conda-forge nbgitpuller
-# https://github.com/jupyterhub/nbgitpuller
-# nbgitpuller-0.10.1
-RUN pip install nbgitpuller
-
-# enable classic notebook nbextensions
-# https://jupyter-contrib-nbextensions.readthedocs.io/en/latest/install.html
-# jupyter_contrib_nbextensions 0.5.1
-RUN conda install jupyter_contrib_nbextensions --yes
-
+RUN conda install jupytext -c conda-forge
+RUN conda install -c conda-forge nbgitpuller 
 
 # ipywidgets not sure if this is already included but install
-# widgetsnbextension        3.5.1
-RUN conda install widgetsnbextension --yes
-# ipywidgets                7.6.3
-RUN conda install ipywidgets --yes
-RUN jupyter nbextension enable --py widgetsnbextension
+RUN conda install -c conda-forge widgetsnbextension
+RUN conda install -c anaconda ipywidgets 
+#RUN jupyter nbextension enable --py widgetsnbextension
 
 # added matplotlib
-# https://matplotlib.org/stable/users/installing.html
-# matplotlib                3.4.2  
-RUN pip install -U matplotlib
+RUN conda install -c conda-forge matplotlib 
 
 # added pandas
-# https://pandas.pydata.org/pandas-docs/stable/getting_started/install.html
-# pandas-1.3.1
-RUN pip install pandas
+RUN conda install -c anaconda pandas
 
 # added plotly express
-# https://plotly.com/python/getting-started/
-# plotly-5.1.0
-RUN pip install plotly
-# https://pypi.org/project/plotly-express/
-# plotly-express-0.4.1 
-RUN pip install plotly_express
+RUN conda install -c plotly plotly_express
+
+
+# enable classic notebook nbextensions
+RUN conda install -c conda-forge jupyter_contrib_nbextensions
 
 # turn on spellchecker extension
 RUN jupyter nbextension enable spellchecker/main
@@ -91,11 +58,16 @@ RUN jupyter nbextension enable hide_input_all/main
 RUN jupyter nbextension enable hide_input/main 
 
 USER root
+# moved to seperate stage base-unmin
+# we want the container to feel more like a fully fledged system so we are pulling the trigger and unminimizing it
+# RUN yes | unminimize || true
+
 # as a hack we are going to try changing group id of /home/joyvan to be root to see if I can trick things into
 # working on the moc
 RUN chgrp -R root /home/jovyan
 
 USER $NB_USER
+
 # turn off login messages and suppress sudo group check in /etc/bash.bashrc
 # was causing unnecessary error messages due to gid not in /etc/groups on operate-first
 RUN touch ~/.hushlogin
@@ -105,7 +77,6 @@ RUN echo "export PS1='\$ '" >> ~/.bashrc
 
 # work around bug when term is xterm and emacs runs in xterm.js -- causes escape characters in file
 RUN echo "export TERM=linux" >> ~/.bashrc
-
+ 
 # finally remove default working directory from joyvan home
 RUN rmdir ~/work
-
