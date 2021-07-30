@@ -65,6 +65,7 @@ USER root
 # as a hack we are going to try changing group id of /home/joyvan to be root to see if I can trick things into
 # working on the moc
 RUN chgrp -R root /home/jovyan
+RUN chmod -R g+rX /home/jovyan
 
 USER $NB_USER
 
@@ -80,3 +81,10 @@ RUN echo "export TERM=linux" >> ~/.bashrc
  
 # finally remove default working directory from joyvan home
 RUN rmdir ~/work
+
+# jupyter-stack contains logic to run custom start hook scripts from
+# two locations -- /usr/local/bin/start-notebook.d and
+#                 /usr/local/bin/before-notebook.d
+# and scripts in these directoreis are run automatically
+# an opportunity to set things up based on dynamic facts such as user name
+COPY start-notebook.d /usr/local/bin/start-notebook.d

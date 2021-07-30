@@ -1,0 +1,10 @@
+# do not send .git dir to context
+.git/
+.dockeringnore
+README.md
+Makefile
+base
+base-unmin
+attachroot.sh
+*~
+.gitignore
