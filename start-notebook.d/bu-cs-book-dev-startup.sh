@@ -7,6 +7,13 @@ SN=bu-cs-book-dev-startup.sh
 echo "$SN: BEGIN: $(id -a)"
 
 if [[ -n $JUPYTERHUB_USER_NAME ]]; then
+    # see if we need to create links to permenant stored verions of critical files
+    # .gitconfig
+    # .ssh
+    # emacs and vim config
+    # gdb 
+
+    # once the above is done we can get rid of this
     echo "$SN: configuring git user email to $JUPYTERHUB_USER_NAME"
     git config --global user.email "$JUPYTERHUB_USER_NAME"
     echo "$SN: configuring git user name to ${JUPYTERHUB_USER_NAME%%@*}"
