@@ -9,6 +9,9 @@ SHELL:=bash
 # force no caching for docker builds
 #DCACHING=--no-cache
 
+# we mount here to match operate first
+MOUNT_DIR=/opt/app-root/src
+HOST_DIR=${HOME}
 help:
 # http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 	@grep -E '^[a-zA-Z0-9_%/-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
@@ -38,14 +41,14 @@ base-joyvan: ## start container with root shell to do admin and poke around
 
 base-lab: INAME=$(IMAGE)-base
 base-lab: ARGS?=
-base-lab: DARGS?=-e JUPYTER_ENABLE_LAB=yes -v "${HOME}":/home/jovyan/work
+base-lab: DARGS?=-e JUPYTER_ENABLE_LAB=yes -v "${HOST_DIR}":"${MOUNT_DIR}"
 base-lab: PORT?=8888
 base-lab: ## start a jupyter lab notebook server container instance 
 	docker run -it --rm -p $(PORT):8888 $(DARGS) $(INAME):$(TAG) $(ARGS)
 
 base-nb: INAME=$(IMAGE)-base
 base-nb: ARGS?=
-base-nb: DARGS?=-v "${HOME}":/home/jovyan/work
+base-nb: DARGS?=-v "${HOST_DIR}":"${MOUNT_DIR}"
 base-nb: PORT?=8888
 base-nb: ## start a jupyter classic notebook server container instance 
 	docker run -it --rm -p $(PORT):8888 $(DARGS) $(INAME):$(TAG) $(ARGS) 
@@ -74,14 +77,14 @@ base-unmin-joyvan: ## start container with root shell to do admin and poke aroun
 
 base-unmin-lab: INAME=$(IMAGE)-base-unmin
 base-unmin-lab: ARGS?=
-base-unmin-lab: DARGS?=-e JUPYTER_ENABLE_LAB=yes -v "${HOME}":/home/jovyan/work
+base-unmin-lab: DARGS?=-e JUPYTER_ENABLE_LAB=yes -v "${HOST_DIR}":"${MOUNT_DIR}"
 base-unmin-lab: PORT?=8888
 base-unmin-lab: ## start a jupyter lab notebook server container instance 
 	docker run -it --rm -p $(PORT):8888 $(DARGS) $(INAME):$(TAG) $(ARGS)
 
 base-unmin-nb: INAME=$(IMAGE)-base-unmin
 base-unmin-nb: ARGS?=
-base-unmin-nb: DARGS?=-v "${HOME}":/home/jovyan/work
+base-unmin-nb: DARGS?=-v "${HOST_DIR}":"${MOUNT_DIR}"
 base-unmin-nb: PORT?=8888
 base-unmin-nb: ## start a jupyter classic notebook server container instance 
 	docker run -it --rm -p $(PORT):8888 $(DARGS) $(INAME):$(TAG) $(ARGS) 
@@ -106,13 +109,13 @@ joyvan: ## start container with root shell to do admin and poke around
 
 #docker run --rm -e JUPYTER_ENABLE_LAB=yes -p 8888:8888 -v "${HOME}":/home/jovyan/work  jappavoo/bu-cs-book-dev:latest
 lab: ARGS?=
-lab: DARGS?=-e JUPYTER_ENABLE_LAB=yes -v "${HOME}":/home/jovyan/work
+lab: DARGS?=-e JUPYTER_ENABLE_LAB=yes -v "${HOST_DIR}":"${MOUNT_DIR}"
 lab: PORT?=8888
 lab: ## start a jupyter lab notebook server container instance 
 	docker run -it --rm -p $(PORT):8888 $(DARGS) $(IMAGE):$(TAG) $(ARGS)
 
 nb: ARGS?=
-nb: DARGS?=-v "${HOME}":/home/jovyan/work
+nb: DARGS?=-v "${HOST_DIR}":"${MOUNT_DIR}"
 nb: PORT?=8888
 nb: ## start a jupyter classic notebook server container instance 
 	docker run -it --rm -p $(PORT):8888 $(DARGS) $(IMAGE):$(TAG) $(ARGS) 

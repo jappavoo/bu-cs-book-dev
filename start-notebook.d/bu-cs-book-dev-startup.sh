@@ -1,23 +1,44 @@
 #!/bin/bash
 #set -x
 SN=bu-cs-book-dev-startup.sh
+[[ -z $MOUNT_DIR ]] && export MOUNT_DIR=/opt/app-root/src
+
 # this script is designed to be run by the jupyter stack /usr/local/bin/start.sh
 # As per the standard jupyter startup scripts we use the following test to
 # figure out if we have been started in a jupyterhub env
 echo "$SN: BEGIN: $(id -a)"
 
-if [[ -n $JUPYTERHUB_USER_NAME ]]; then
-    # see if we need to create links to permenant stored verions of critical files
-    # .gitconfig
-    # .ssh
-    # emacs and vim config
-    # gdb 
-
-    # once the above is done we can get rid of this
-    echo "$SN: configuring git user email to $JUPYTERHUB_USER_NAME"
-    git config --global user.email "$JUPYTERHUB_USER_NAME"
-    echo "$SN: configuring git user name to ${JUPYTERHUB_USER_NAME%%@*}"
-    git config --global user.name "${JUPYTERHUB_USER_NAME%%@*}"
+if [[ -d $MOUNT_DIR ]]; then
+    echo "$SN: Found $MOUNT_DIR"
+    FILE=.gitconfig
+    echo "$SN: Mapping $FILE to $MOUNT_DIR/$FILE"
+    if [[ ! -a $HOME/$FILE ]]; then
+	if [[ ! -a $MOUNT_DIR/$FILE ]]; then
+	    echo "$SN: creating $MOUNT_DIR/$FILE"
+	    touch $MOUNT_DIR/$FILE
+	fi
+	if [[ -a $MOUNT_DIR/$FILE ]]; then
+	    echo "$SN: Linking $MOUNT_DIR/$FILE -> $HOME/$FILE"
+	    ln -s $MOUNT_DIR/$FILE $HOME/$FILE
+	fi
+    fi
+    DIR=.ssh
+    echo "$SN: Mapping $FILE to $MOUNT_DIR/$FILE"
+    if [[ ! -d $HOME/$DIR ]]; then
+	if [[ ! -d $MOUNT_DIR/$DIR ]]; then
+	    echo "$SN: creating $MOUNT_DIR/$DIR"
+	    if mkdir $MOUNT_DIR/$DIR; then
+		if [[ $DIR == .ssh ]]; then
+		    echo "$SN: Fixing permisions for $MOUNT/$DIR"
+		    chmod 700 $MOUNT_DIR/$DIR
+		fi
+	    fi
+	fi
+	if [[ -d $MOUNT_DIR/$DIR ]]; then
+	    echo "$SN: Linking $MOUNT_DIR/$DIR -> $HOME/$DIR"
+	    ln -s $MOUNT_DIR/$DIR $HOME/$DIR
+	fi
+    fi
 fi
 
 echo "$0: END"
