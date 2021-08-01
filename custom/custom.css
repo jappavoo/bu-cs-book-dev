@@ -65,7 +65,7 @@ div.output_html {
 }
 div.output_subarea {
  overflow-x: auto;
- padding: 1.2em !important;
+ padding: 0.0em !important;
  -webkit-box-flex: 1;
  -moz-box-flex: 1;
  box-flex: 1;
