@@ -57,10 +57,13 @@ RUN jupyter nbextension enable hide_input_all/main
 # enable hide
 RUN jupyter nbextension enable hide_input/main 
 
+# customize look and feel so that class room presentations have a more consistent behaviour
+RUN pip install jupyterthemes
+RUN pip install --upgrade jupyterthemes
+# we are not done with this but it is a start will likely want to customize somemore
+RUN jt -t chesterish -T
+
 USER root
-# moved to seperate stage base-unmin
-# we want the container to feel more like a fully fledged system so we are pulling the trigger and unminimizing it
-# RUN yes | unminimize || true
 
 # as a hack we are going to try changing group id of /home/joyvan to be root to see if I can trick things into
 # working on the moc
