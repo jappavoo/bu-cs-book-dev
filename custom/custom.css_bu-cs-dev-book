@@ -56,25 +56,6 @@ div.output_wrapper {
  border-top-right-radius: 0px;
  border-top-left-radius: 0px;
 }
-div.output_subarea.output_text.output_stream.output_stdout,
-div.output_subarea.output_text {
- font-family: monospace, monospace;
- font-size: 8.5pt !important;
- line-height: 150% !important;
- background-color: #323a48;
- color: #b4bcde;
- border-top-right-radius: 0px;
- border-top-left-radius: 0px;
- margin-left: 11.5px;
-}
-div.output_area pre {
- font-family: monospace, monospace;
- font-size: 8.5pt !important;
- line-height: 151% !important;
- color: #b4bcde;
- border-top-right-radius: 0px;
- border-top-left-radius: 0px;
-}
 div.output_area {
  display: -webkit-box;
 }
@@ -84,7 +65,7 @@ div.output_html {
 }
 div.output_subarea {
  overflow-x: auto;
- padding: 1.2em !important;
+ padding: 0.0em !important;
  -webkit-box-flex: 1;
  -moz-box-flex: 1;
  box-flex: 1;
@@ -101,25 +82,27 @@ div#ipython_notebook {
  display: none !important;
 }
 .terminal-app {
- background: #1a2028;
+    background: #1a2028;
+    padding: 0.0em;
+    border-radius: 0px;
+    border: none; 
 }
 .terminal-app > #header {
- background: #1a2028;
+    background: #1a2028;
+    padding: 0.0em;
+    border-radius: 0px;
+    border: none; 
 }
 .terminal-app .terminal {
  font-family: monospace, monospace;
  font-size: 11pt;
  line-height: 170%;
- color: #cdd2e9;
- background: #293340;
- padding: 0.4em;
- border-radius: 2px;
+ padding: 0.0em;
+ border-radius: 0px;
  -webkit-box-shadow: none;
  box-shadow: none;
 }
 .terminal .xterm-viewport {
- background-color: #293340;
- color: #cdd2e9;
  overflow-y: auto;
 }
 .terminal .xterm-color-0 {
