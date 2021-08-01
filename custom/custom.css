@@ -56,25 +56,6 @@ div.output_wrapper {
  border-top-right-radius: 0px;
  border-top-left-radius: 0px;
 }
-div.output_subarea.output_text.output_stream.output_stdout,
-div.output_subarea.output_text {
- font-family: monospace, monospace;
- font-size: 8.5pt !important;
- line-height: 150% !important;
- background-color: #323a48;
- color: #b4bcde;
- border-top-right-radius: 0px;
- border-top-left-radius: 0px;
- margin-left: 11.5px;
-}
-div.output_area pre {
- font-family: monospace, monospace;
- font-size: 8.5pt !important;
- line-height: 151% !important;
- color: #b4bcde;
- border-top-right-radius: 0px;
- border-top-left-radius: 0px;
-}
 div.output_area {
  display: -webkit-box;
 }
