@@ -82,25 +82,27 @@ div#ipython_notebook {
  display: none !important;
 }
 .terminal-app {
- background: #1a2028;
+    background: #1a2028;
+    padding: 0.0em;
+    border-radius: 0px;
+    border: none; 
 }
 .terminal-app > #header {
- background: #1a2028;
+    background: #1a2028;
+    padding: 0.0em;
+    border-radius: 0px;
+    border: none; 
 }
 .terminal-app .terminal {
  font-family: monospace, monospace;
  font-size: 11pt;
  line-height: 170%;
- color: #cdd2e9;
- background: #293340;
- padding: 0.4em;
- border-radius: 2px;
+ padding: 0.0em;
+ border-radius: 0px;
  -webkit-box-shadow: none;
  box-shadow: none;
 }
 .terminal .xterm-viewport {
- background-color: #293340;
- color: #cdd2e9;
  overflow-y: auto;
 }
 .terminal .xterm-color-0 {
