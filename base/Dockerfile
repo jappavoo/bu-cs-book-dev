@@ -14,11 +14,12 @@ RUN apt-get -y update
 #  ssh
 #  vim 
 #  emacs
+#  joe
 #  6502 tool chain -- includes C compiler, assembler and a linker
 #  file utility -- guesses the type of content in a file -- standard unix tool
 #  man pages
 #  find 
-RUN apt-get -y install build-essential texinfo libncurses-dev vim ssh emacs-nox cc65 bsdmainutils file man-db manpages-posix manpages-dev manpages-posix-dev findutils
+RUN apt-get -y install build-essential texinfo libncurses-dev vim ssh emacs-nox joe cc65 bsdmainutils file man-db manpages-posix manpages-dev manpages-posix-dev findutils
 
 # get and build gdb form source so that we have a current version >10 that support more advanced tui functionality 
 RUN cd /tmp && wget http://ftp.gnu.org/gnu/gdb/gdb-10.2.tar.gz && tar -zxf gdb-10.2.tar.gz && cd gdb-10.2 && ./configure --prefix /usr/local --enable-tui=yes && make -j 4 && make install

@@ -59,11 +59,11 @@ RUN jupyter nbextension enable hide_input/main
 
 # customize look and feel so that class room presentations have a more consistent behaviour
 RUN pip install jupyterthemes
-RUN pip install --upgrade jupyterthemes
+# RUN pip install --upgrade jupyterthemes
 
 # not really happy with the existing themes but used them to hackup
 # something that is ok for the moment
-COPY custom /home/joyvan/.jupyter/custom
+COPY custom /home/jovyan/.jupyter/custom
 
 USER root
 

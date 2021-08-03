@@ -33,10 +33,10 @@ base-root: DARGS?=-u 0
 base-root: ## start container with root shell to do admin and poke around
 	docker run -it --rm $(DARGS) $(INAME):$(TAG) $(ARGS)
 
-base-joyvan: INAME=$(IMAGE)-base
-base-joyvan: ARGS?=/bin/bash
-base-joyvan: DARGS?=
-base-joyvan: ## start container with root shell to do admin and poke around
+base-jovyan: INAME=$(IMAGE)-base
+base-jovyan: ARGS?=/bin/bash
+base-jovyan: DARGS?=
+base-jovyan: ## start container with root shell to do admin and poke around
 	docker run -it --rm $(DARGS) $(INAME):$(TAG) $(ARGS)
 
 base-lab: INAME=$(IMAGE)-base
@@ -69,10 +69,10 @@ base-unmin-root: DARGS?=-u 0
 base-unmin-root: ## start container with root shell to do admin and poke around
 	docker run -it --rm $(DARGS) $(INAME):$(TAG) $(ARGS)
 
-base-unmin-joyvan: INAME=$(IMAGE)-base-unmin
-base-unmin-joyvan: ARGS?=/bin/bash
-base-unmin-joyvan: DARGS?=
-base-unmin-joyvan: ## start container with root shell to do admin and poke around
+base-unmin-jovyan: INAME=$(IMAGE)-base-unmin
+base-unmin-jovyan: ARGS?=/bin/bash
+base-unmin-jovyan: DARGS?=
+base-unmin-jovyan: ## start container with root shell to do admin and poke around
 	docker run -it --rm $(DARGS) $(INAME):$(TAG) $(ARGS)
 
 base-unmin-lab: INAME=$(IMAGE)-base-unmin
@@ -102,9 +102,9 @@ root: DARGS?=-u 0
 root: ## start container with root shell to do admin and poke around
 	docker run -it --rm $(DARGS) $(IMAGE):$(TAG) $(ARGS)
 
-joyvan: ARGS?=/bin/bash
-joyvan: DARGS?=
-joyvan: ## start container with root shell to do admin and poke around
+jovyan: ARGS?=/bin/bash
+jovyan: DARGS?=
+jovyan: ## start container with root shell to do admin and poke around
 	docker run -it --rm $(DARGS) $(IMAGE):$(TAG) $(ARGS)
 
 #docker run --rm -e JUPYTER_ENABLE_LAB=yes -p 8888:8888 -v "${HOME}":/home/jovyan/work  jappavoo/bu-cs-book-dev:latest
