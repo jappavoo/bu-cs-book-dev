@@ -6,6 +6,9 @@ This is the container image source for the BU Computer Science Jupyter Book infr
 2. Building the image from scratch
 3. pull and pushing from the dockerhub
 
+*** Note:  This container does not have any particular book within it.  You must clone or copy whatever particular book you want into it.
+At the <a href="#localSLSlink">bottom</a> you will find a url that should trigger a clone of the Under the Covers - The Secret Life of Software into it. ***
+
 ## Getting started
 
 ### Remote use 
@@ -80,5 +83,10 @@ http://jupyterhub-opf-jupyterhub.apps.zero.massopen.cloud
 https://jupyterhub-opf-jupyterhub.apps.zero.massopen.cloud/hub/spawn?bu-cs-jupyter-book:latest
 - A book that uses this image:<br>
 https://github.com/jappavoo/UndertheCovers
+- If you have the container running locally you can use the following link to automatically clone a copy of the the above book into the container
+<div id=localSLSlink>
+http://127.0.0.1:8888/git-pull?bu-cs-jupyter-book%3Alatest=&repo=https%3A%2F%2Fgithub.com%2Fjappavoo%2FUndertheCovers&urlpath=tree%2FUndertheCovers%2Funderthecovers%2FL00_210_JA.ipynb&branch=main
+    </div>
+
 
 <!-- #endregion -->
