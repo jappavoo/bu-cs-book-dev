@@ -6,8 +6,8 @@ This is the container image source for the BU Computer Science Jupyter Book infr
 2. Building the image from scratch
 3. pull and pushing from the dockerhub
 
-*** Note:  This container does not have any particular book within it.  You must clone or copy whatever particular book you want into it.
-At the <a href="#localSLSlink">bottom</a> you will find a url that should trigger a clone of the Under the Covers - The Secret Life of Software into it. ***
+**Note:  This container does not have any particular book within it.  You must clone or copy whatever particular book you want into it.
+At the <a href="#localSLSlink">bottom</a> you will find a url that should trigger a clone of the Under the Covers - The Secret Life of Software into it.**
 
 ## Getting started
 
