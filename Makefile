@@ -4,6 +4,10 @@
 # Docker image name and tag=
 IMAGE:=jappavoo/bu-cs-book-dev
 TAG?=latest
+# our latest is built from a know stable base version
+BASE_STABLE_VERSION=@sha256:4e21f5507949fe2327420f8caf3cd850a87b13aaea0fe8ed3717e369497d4f54
+# our testing version is built from the latest/bleeding edge version of the base image
+BASE_TEST_VERSION=:latest
 # Shell that make should use
 SHELL:=bash
 # force no caching for docker builds
@@ -17,7 +21,12 @@ help:
 	@grep -E '^[a-zA-Z0-9_%/-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 
-base-build: DARGS?=
+ifeq ($(TAG),latest)
+  BASE_VERSION=$(BASE_STABLE_VERSION)
+else
+  BASE_VERSION=$(BASE_TEST_VERSION)
+endif
+base-build: DARGS?=--build-arg BASE_VERSION=$(BASE_VERSION)
 base-build: INAME=$(IMAGE)-base
 base-build: ## Make the base image
 	docker build $(DARGS) $(DCACHING) --rm --force-rm -t $(INAME):$(TAG) base
@@ -53,7 +62,7 @@ base-nb: PORT?=8888
 base-nb: ## start a jupyter classic notebook server container instance 
 	docker run -it --rm -p $(PORT):8888 $(DARGS) $(INAME):$(TAG) $(ARGS) 
 
-base-unmin-build: DARGS?=
+base-unmin-build: DARGS?=--build-arg VERSION=$(TAG)
 base-unmin-build: INAME=$(IMAGE)-base-unmin
 base-unmin-build: ## Make the base-unmin image
 	docker build $(DARGS) $(DCACHING) --rm --force-rm -t $(INAME):$(TAG) base-unmin
@@ -89,7 +98,7 @@ base-unmin-nb: PORT?=8888
 base-unmin-nb: ## start a jupyter classic notebook server container instance 
 	docker run -it --rm -p $(PORT):8888 $(DARGS) $(INAME):$(TAG) $(ARGS) 
 
-build: DARGS?=
+build: DARGS?=--build-arg VERSION=$(TAG)
 build: ## Make the latest build of the image
 	docker build $(DARGS) $(DCACHING) --rm --force-rm -t $(IMAGE):$(TAG) .
 

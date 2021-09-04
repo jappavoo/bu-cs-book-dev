@@ -1,4 +1,5 @@
-FROM jupyter/minimal-notebook:latest
+ARG BASE_VERSION
+FROM jupyter/minimal-notebook${BASE_VERSION}
 
 # Add RUN statements to install packages as the $NB_USER defined in the base images.
 
@@ -24,5 +25,14 @@ RUN apt-get -y install build-essential texinfo libncurses-dev vim ssh emacs-nox 
 # get and build gdb form source so that we have a current version >10 that support more advanced tui functionality 
 RUN cd /tmp && wget http://ftp.gnu.org/gnu/gdb/gdb-10.2.tar.gz && tar -zxf gdb-10.2.tar.gz && cd gdb-10.2 && ./configure --prefix /usr/local --enable-tui=yes && make -j 4 && make install
 RUN cd /tmp && rm -rf gdb-10.2 && rm gdb-10.2.tar.gz
+
+# we add xterm to pick up resize :-(
+RUN apt-get -y --fix-missing install xterm || true
+
+# adding BC 
+RUN apt-get -y  install bc
+
+# adding moria for old time sake
+RUN sudo apt-get install -y moria
  
 USER $NB_USER

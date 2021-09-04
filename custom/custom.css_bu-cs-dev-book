@@ -61,7 +61,7 @@ div.output_area {
 }
 div.output_html {
  font-family: monospace, monospace;
- font-size: 8.5pt;
+ font-size: 1em;
 }
 div.output_subarea {
  overflow-x: auto;
@@ -95,7 +95,7 @@ div#ipython_notebook {
 }
 .terminal-app .terminal {
  font-family: monospace, monospace;
- font-size: 11pt;
+ font-size: 1em;
  line-height: 170%;
  padding: 0.0em;
  border-radius: 0px;

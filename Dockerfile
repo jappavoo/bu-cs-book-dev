@@ -1,4 +1,5 @@
-FROM jappavoo/bu-cs-book-dev-base-unmin:latest
+ARG VERSION
+FROM jappavoo/bu-cs-book-dev-base-unmin:${VERSION}
  
 USER $NB_USER
 
@@ -57,15 +58,27 @@ RUN jupyter nbextension enable hide_input_all/main
 # enable hide
 RUN jupyter nbextension enable hide_input/main 
 
+# enable the use of python in markdown cells python-markdown/main
+# could not get this to work
+#RUN jupyter nbextension enable python-markdown/main 
+
 # customize look and feel so that class room presentations have a more consistent behaviour
-RUN pip install jupyterthemes
+# did not really need -- commenting out for the moment
+#RUN pip install jupyterthemes
 # RUN pip install --upgrade jupyterthemes
+
+# add support for nbstripout so that by default commits back to a book repo will strip out cell outputs
+RUN pip install nbstripout
 
 # not really happy with the existing themes but used them to hackup
 # something that is ok for the moment
 COPY custom /home/jovyan/.jupyter/custom
 
 USER root
+RUN chown -R jovyan /home/jovyan/.jupyter
+
+# as per the nbstripout readme we setup nbstripout be always be used for the joyvan user for all repos
+RUN nbstripout --install --system 
 
 # as a hack we are going to try changing group id of /home/joyvan to be root to see if I can trick things into
 # working on the moc

@@ -1,4 +1,5 @@
-FROM jappavoo/bu-cs-book-dev-base:latest
+ARG VERSION
+FROM jappavoo/bu-cs-book-dev-base:${VERSION}
 
 USER root
 
