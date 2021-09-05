@@ -13,6 +13,8 @@ SHELL:=bash
 # force no caching for docker builds
 #DCACHING=--no-cache
 
+SSH_PORT?=2222
+
 # we mount here to match operate first
 MOUNT_DIR=/opt/app-root/src
 HOST_DIR=${HOME}
@@ -118,13 +120,13 @@ jovyan: ## start container with root shell to do admin and poke around
 
 #docker run --rm -e JUPYTER_ENABLE_LAB=yes -p 8888:8888 -v "${HOME}":/home/jovyan/work  jappavoo/bu-cs-book-dev:latest
 lab: ARGS?=
-lab: DARGS?=-e JUPYTER_ENABLE_LAB=yes -v "${HOST_DIR}":"${MOUNT_DIR}"
+lab: DARGS?=-e JUPYTER_ENABLE_LAB=yes -v "${HOST_DIR}":"${MOUNT_DIR}" -p ${SSH_PORT}:22
 lab: PORT?=8888
 lab: ## start a jupyter lab notebook server container instance 
 	docker run -it --rm -p $(PORT):8888 $(DARGS) $(IMAGE):$(TAG) $(ARGS)
 
 nb: ARGS?=
-nb: DARGS?=-v "${HOST_DIR}":"${MOUNT_DIR}"
+nb: DARGS?=-v "${HOST_DIR}":"${MOUNT_DIR}" -p ${SSH_PORT}:22
 nb: PORT?=8888
 nb: ## start a jupyter classic notebook server container instance 
 	docker run -it --rm -p $(PORT):8888 $(DARGS) $(IMAGE):$(TAG) $(ARGS) 
