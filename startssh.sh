@@ -21,6 +21,11 @@ fi
 docker exec -u 0 -it $id service ssh stop
 docker exec -u 0 -it $id service ssh start
 
+# big f'ing hack to compenstate for default bashrc not having conda in path.
+# Not sure how jupyter does this but some how it is in path before bashrc starts
+docker exec -u jovyan $id  bash -c 'cp .bashrc .bashrc.old; echo -e "#JA HACK\nexport PATH=\$PATH:/opt/conda/bin" > .bashrc; cat .bashrc.old >> .bashrc'
+
+ 
 echo "This should now work:"
 
 echo "ssh -p $port -i ${keyfile%%.pub} $user@localhost"
