@@ -28,7 +28,12 @@ docker exec -u jovyan $id  bash -c 'cp .bashrc .bashrc.old; echo -e "#JA HACK\ne
  
 echo "This should now work:"
 
-echo "ssh -p $port -i ${keyfile%%.pub} $user@localhost"
-echo "ssh -p $port -i ${keyfile%%.pub} $user@localhost xterm"
-echo "ssh -p $port -i ${keyfile%%.pub} $user@localhost inkscape"
+echo "To make life easier you might want to add the following to your ssh config"
+echo "Host localhost
+       StrictHostKeyChecking no
+       UserKnownHostsFile=/dev/null"
+
+echo "ssh -o "UserKnownHostsFile=/dev/null" -o "StrictHostKeyChecking=no" -p $port -i ${keyfile%%.pub} $user@localhost"
+echo "ssh -o "UserKnownHostsFile=/dev/null" -o "StrictHostKeyChecking=no" -p $port -i ${keyfile%%.pub} $user@localhost xterm"
+echo "ssh -o "UserKnownHostsFile=/dev/null" -o "StrictHostKeyChecking=no" -p $port -i ${keyfile%%.pub} $user@localhost inkscape"
 
