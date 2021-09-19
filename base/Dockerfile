@@ -30,7 +30,9 @@ RUN cd /tmp && rm -rf gdb-10.2 && rm gdb-10.2.tar.gz
 RUN apt-get -y --fix-missing install xterm || true
 
 # adding moria for old time sake
-RUN sudo apt-get install -y moria
+RUN apt-get install -y moria
 
+# adding acl support so that we can discuss / introduce it
+RUN apt-get install -y acl
 # adding 
 USER $NB_USER
