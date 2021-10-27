@@ -1,5 +1,6 @@
 ARG BASE_VERSION
-FROM jupyter/minimal-notebook${BASE_VERSION}
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}${BASE_VERSION}
 
 # Add RUN statements to install packages as the $NB_USER defined in the base images.
 
@@ -34,5 +35,12 @@ RUN apt-get install -y moria
 
 # adding acl support so that we can discuss / introduce it
 RUN apt-get install -y acl
-# adding 
+
+# adding cmake to facilitate working with wasm via wabt
+RUN apt-get update
+RUN apt-get install -y cmake 
+
+# adding zip so that gradescope autograders can be built
+RUN apt-get install -y zip
+
 USER $NB_USER

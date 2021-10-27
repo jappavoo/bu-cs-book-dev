@@ -4,6 +4,9 @@
 # Docker image name and tag=
 IMAGE:=jappavoo/bu-cs-book-dev
 TAG?=latest
+# BASE_IMAGE
+BASE?=jupyter
+
 # our latest is built from a know stable base version
 BASE_STABLE_VERSION=@sha256:4e21f5507949fe2327420f8caf3cd850a87b13aaea0fe8ed3717e369497d4f54
 # our testing version is built from the latest/bleeding edge version of the base image
@@ -22,13 +25,20 @@ help:
 # http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 	@grep -E '^[a-zA-Z0-9_%/-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-
-ifeq ($(TAG),latest)
-  BASE_VERSION=$(BASE_STABLE_VERSION)
+ifeq ($(BASE),jupyter)
+  BASE_IMAGE=jupyter/minimal-notebook
+  ifeq ($(TAG),latest)
+    BASE_VERSION=$(BASE_STABLE_VERSION)
+  else
+    BASE_VERSION=$(BASE_TEST_VERSION)
+  endif
 else
-  BASE_VERSION=$(BASE_TEST_VERSION)
+  BASE_IMAGE=gradescope/auto-builds
+  BASE_VERSION=:ubuntu-20.04
+  IMAGE:=jappavoo/bu-cs-book-gradescope
 endif
-base-build: DARGS?=--build-arg BASE_VERSION=$(BASE_VERSION)
+
+base-build: DARGS?=--build-arg BASE_IMAGE=$(BASE_IMAGE) --build-arg BASE_VERSION=$(BASE_VERSION)
 base-build: INAME=$(IMAGE)-base
 base-build: ## Make the base image
 	docker build $(DARGS) $(DCACHING) --rm --force-rm -t $(INAME):$(TAG) base

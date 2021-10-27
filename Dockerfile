@@ -70,6 +70,8 @@ RUN jupyter nbextension enable hide_input/main
 # add support for nbstripout so that by default commits back to a book repo will strip out cell outputs
 RUN pip install nbstripout
 
+RUN conda install -c conda-forge ipydrawio ipydrawio-export
+
 # not really happy with the existing themes but used them to hackup
 # something that is ok for the moment
 COPY custom /home/jovyan/.jupyter/custom
