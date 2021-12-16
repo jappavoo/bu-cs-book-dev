@@ -13,8 +13,8 @@ At the <a href="#localSLSlink">bottom</a> you will find a url that should trigge
 
 ### Remote use 
 
-This container image is available on the MOC [operate-first](http://jupyterhub-opf-jupyterhub.apps.zero.massopen.cloud) JupyerHub service.  To use the container on this service login and start a server with the `BU CS Jupyter Book` image.  You can use this link to directly start it if you don't already have a server running:<br>
-https://jupyterhub-opf-jupyterhub.apps.zero.massopen.cloud/hub/spawn?bu-cs-jupyter-book:latest
+This container image is available on the MOC [operate-first](https://jupyterhub-opf-jupyterhub.apps.smaug.na.operate-first.cloud/hub/home) JupyerHub service.  To use the container on this service login and start a server with the `BU CS Jupyter Book` image.  You can use this link to directly start it if you don't already have a server running:<br>
+https://jupyterhub-opf-jupyterhub.apps.smaug.na.operate-first.cloud/hub/spawn?bu-cs-jupyter-book:latest
 
 
 ### Prerequisites for local use
