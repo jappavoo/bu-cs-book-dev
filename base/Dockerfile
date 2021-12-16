@@ -43,4 +43,23 @@ RUN apt-get install -y cmake
 # adding zip so that gradescope autograders can be built
 RUN apt-get install -y zip
 
+# adding ascii2binary to make some examples easier
+RUN apt-get install -y ascii2binary
+
+# adding strace for sycall tracing
+RUN apt-get install -y strace
+
+RUN dpkg --add-architecture i386 && apt-get -y update && apt-get install -y lib32gcc-9-dev libedit-dev:i386
+
+# support linux kernel building
+RUN apt-get -y update
+RUN apt-get -y install  bison flex libssl-dev libelf-dev
+
+# add dwarf dump to allow exploration of debug info in a binary
+# In the end I think I am happier using elfread with --debug-dump=decodedline like functionality
+# RUN apt-get install -y dwarfdump
+
+# add netwide assembler to make stream disassembling easier
+RUN apt-get install -y nasm
+
 USER $NB_USER

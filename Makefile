@@ -132,8 +132,9 @@ jovyan: ## start container with root shell to do admin and poke around
 lab: ARGS?=
 lab: DARGS?=-e JUPYTER_ENABLE_LAB=yes -v "${HOST_DIR}":"${MOUNT_DIR}" -p ${SSH_PORT}:22
 lab: PORT?=8888
-lab: ## start a jupyter lab notebook server container instance 
+lab: ## start a jupyter lab notebook server container instance
 	docker run -it --rm -p $(PORT):8888 $(DARGS) $(IMAGE):$(TAG) $(ARGS)
+#	docker run -it --privileged --rm -p $(PORT):8888 $(DARGS) $(IMAGE):$(TAG) $(ARGS)
 
 nb: ARGS?=
 nb: DARGS?=-v "${HOST_DIR}":"${MOUNT_DIR}" -p ${SSH_PORT}:22
