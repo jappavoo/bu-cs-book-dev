@@ -1,8 +1,10 @@
 # this was seeded from https://github.com/umsi-mads/education-notebook/blob/master/Makefile
 .PHONY: help build dev test test-env
 
+#DOCKERSERVICE=
+#DOCKERSERVICE=quay.io/
 # Docker image name and tag=
-IMAGE:=jappavoo/bu-cs-book-dev
+IMAGE:=${DOCKERSERVICE}jappavoo/bu-cs-book-dev
 TAG?=latest
 # BASE_IMAGE
 BASE?=jupyter
