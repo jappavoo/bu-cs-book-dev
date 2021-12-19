@@ -1,5 +1,4 @@
-ARG BASE_VERSION
-FROM quay.io/thoth-station/s2i-minimal-f34-py39-notebook${BASE_VERSION}
+FROM quay.io/thoth-station/s2i-minimal-f34-py39-notebook@sha256:8dd0326cdb8f89dedd1a858ed7469fce77a84a444c2656f134896ab204491216
 
 # Add RUN statements to install packages as the $NB_USER defined in the base images.
 
@@ -40,5 +39,6 @@ RUN cd /tmp && wget https://github.com/dungeons-of-moria/umoria/archive/refs/tag
 
 ENV PATH=$PATH:/opt/umoria
 
-# adding 
 USER 1001
+
+RUN pip install requirements.txt

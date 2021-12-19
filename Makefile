@@ -5,7 +5,7 @@
 IMAGE:=jappavoo/bu-cs-book-dev
 TAG?=latest
 # our latest is built from a know stable base version
-BASE_STABLE_VERSION=@sha256:4e21f5507949fe2327420f8caf3cd850a87b13aaea0fe8ed3717e369497d4f54
+BASE_STABLE_VERSION=@sha256:8dd0326cdb8f89dedd1a858ed7469fce77a84a444c2656f134896ab204491216
 # our testing version is built from the latest/bleeding edge version of the base image
 BASE_TEST_VERSION=:latest
 # Shell that make should use

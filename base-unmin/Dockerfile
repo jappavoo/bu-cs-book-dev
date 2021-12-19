@@ -7,4 +7,4 @@ USER root
 # we want the container to feel more like a fully fledged system so we are pulling the trigger and unminimizing it
 RUN yes | unminimize || true
 
-USER $NB_USER
+USER 1001
