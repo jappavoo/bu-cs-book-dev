@@ -1,5 +1,7 @@
 # this was seeded from https://github.com/umsi-mads/education-notebook/blob/master/Makefile
-.PHONY: help build dev test test-env
+.PHONY: help build dev test test-env clean
+
+ARCH64VMTGZ=https://cs-web.bu.edu/~jappavoo/Resources/UC-SLS/aarch64vm.tgz
 
 #DOCKERSERVICE=
 #DOCKERSERVICE=quay.io/
@@ -40,6 +42,10 @@ else
   IMAGE:=jappavoo/bu-cs-book-gradescope
 endif
 
+base/aarch64vm/README.md:
+	cd base && wget -O - ${ARCH64VMTGZ} | tar -zxf -
+
+base-build: base/aarch64vm/README.md
 base-build: DARGS?=--build-arg BASE_IMAGE=$(BASE_IMAGE) --build-arg BASE_VERSION=$(BASE_VERSION)
 base-build: INAME=$(IMAGE)-base
 base-build: ## Make the base image
@@ -144,3 +150,5 @@ nb: PORT?=8888
 nb: ## start a jupyter classic notebook server container instance 
 	docker run -it --rm -p $(PORT):8888 $(DARGS) $(IMAGE):$(TAG) $(ARGS) 
 
+clean:
+	rm -rf $(wildcard base/aarch64vm base/aarch64vm.tgz)

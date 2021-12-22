@@ -62,4 +62,22 @@ RUN apt-get -y install  bison flex libssl-dev libelf-dev
 # add netwide assembler to make stream disassembling easier
 RUN apt-get install -y nasm
 
+# add qemu-system-aarch64 to permit arm64 assemmbly examples
+# need qemu 5 or higher to pickup support for compressed images
+#  - so need to get this from backports given that jupyter-minimal is from ubuntu focal for which qemu 4 is the default
+#  - add backports
+#  - install qemu from backport -- only installing aarch64 and tools (eg qemu-immg) as that is all we need
+RUN apt update -y && apt install -y software-properties-common && apt update -y && add-apt-repository -y ppa:canonical-server/server-backports && apt-get install -y  -t focal-backports  qemu-system-aarch64
+
+RUN apt-get install -y socat rlwrap
+
 USER $NB_USER
+
+# copy aarch64vm into the image
+COPY aarch64vm /home/aarch64vm
+
+USER root
+RUN chown -R jovyan /home/aarch64vm
+
+USER $NB_USER
+
