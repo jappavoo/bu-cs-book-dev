@@ -78,6 +78,7 @@ COPY aarch64vm /home/aarch64vm
 
 USER root
 RUN chown -R jovyan /home/aarch64vm
+RUN chgrp -R root /home/aarch64vm && chmod -R g+rX /home/aarch64vm && chmod g+w /home/aarch64vm && chmod g+w /home/aarch64vm/*
 
 USER $NB_USER
 
