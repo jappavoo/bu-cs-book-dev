@@ -77,6 +77,8 @@ There will be a lot of information displayed in response to this command.  But a
 ## Useful links:
 - Published pre-built version:<br>
 https://hub.docker.com/repository/docker/jappavoo/bu-cs-book-dev
+- Boston University Course Online Service : be sure to pick<b>
+https://jupyterhub-redhat-ods-applications.apps.bu-rosa.8pmt.p1.openshiftapps.com/hub/user-redirect/lab
 - Operate-first JupyterHub Service: <br>
 http://jupyterhub-opf-jupyterhub.apps.zero.massopen.cloud
 - Direct spawn on Operate-first: <br>
