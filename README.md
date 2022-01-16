@@ -52,16 +52,16 @@ $
 To start a local container from the image:
 > make nb
 ```
-$ make nb
-docker run -it --rm -p 8888:8888 -v "/Users/myname":"/opt/app-root/src" jappavoo/bu-cs-book-dev:latest  
-WARN: Jupyter Notebook deprecation notice https://github.com/jupyter/docker-stacks#jupyter-notebook-deprecation-notice.
+$ make lab
+docker run -it --rm -p 8888:8888 -e JUPYTER_ENABLE_LAB=yes -v "/Users/jonathan":"/opt/app-root/src" -p 2222:22 quay.io/jappavoo/bu-cs-book-dev:latest 
+/usr/local/bin/start-notebook.sh: running hooks in /usr/local/bin/start-notebook.d
 
 ... 
-    To access the notebook, open this file in a browser:
-        file:///home/jovyan/.local/share/jupyter/runtime/nbserver-9-open.html
+    To access the server, open this file in a browser:
+        file:///home/jovyan/.local/share/jupyter/runtime/jpserver-9-open.html
     Or copy and paste one of these URLs:
-        http://0ab5d990a6f6:8888/?token=d8c3ef6507c6df9e379df4c3745933e100850165c18f19ea
-     or http://127.0.0.1:8888/?token=d8c3ef6507c6df9e379df4c3745933e100850165c18f19ea
+        http://672be921b600:8888/lab?token=ceadc63909b2eb8b8de5aa7c604480fef3bf2612d34e3ae3
+     or http://127.0.0.1:8888/lab?token=ceadc63909b2eb8b8de5aa7c604480fef3bf2612d34e3ae3
 ```
 
 There will be a lot of information displayed in response to this command.  But all we care about is the url on the last line.  You should be able to paste it into your web browser and then it will connect the the jupyter-server running within it.
@@ -76,11 +76,11 @@ There will be a lot of information displayed in response to this command.  But a
 
 ## Useful links:
 - Published pre-built version:<br>
-https://hub.docker.com/repository/docker/jappavoo/bu-cs-book-dev
-- Operate-first JupyterHub Service: <br>
-http://jupyterhub-opf-jupyterhub.apps.zero.massopen.cloud
-- Direct spawn on Operate-first: <br>
-https://jupyterhub-opf-jupyterhub.apps.zero.massopen.cloud/hub/spawn?bu-cs-jupyter-book:latest
+https://quay.io/jappavoo/bu-cs-book-dev:latest
+- Boston University Course Online Service : be sure to pick `Boston University - Computer Science - Book` <br>
+https://jupyterhub-redhat-ods-applications.apps.bu-rosa.8pmt.p1.openshiftapps.com/hub/user-redirect/lab
+- Public open service:  RedHat Operate-first JupyterHub Service: be sure to pick `BU CS Jupyter Book`<br>
+https://jupyterhub-opf-jupyterhub.apps.smaug.na.operate-first.cloud/hub/user-redirect/lab
 - A book that uses this image:<br>
 https://github.com/jappavoo/UndertheCovers
 - If you have the container running locally you can use the following link to automatically clone a copy of the the above book into the container
