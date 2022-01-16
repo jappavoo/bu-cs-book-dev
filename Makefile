@@ -4,7 +4,7 @@
 ARCH64VMTGZ=https://cs-web.bu.edu/~jappavoo/Resources/UC-SLS/aarch64vm.tgz
 
 #DOCKERSERVICE=
-#DOCKERSERVICE=quay.io/
+DOCKERSERVICE?=quay.io/
 # Docker image name and tag=
 IMAGE:=${DOCKERSERVICE}jappavoo/bu-cs-book-dev
 TAG?=latest
