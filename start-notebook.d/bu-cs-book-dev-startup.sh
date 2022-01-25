@@ -47,6 +47,20 @@ if [[ -d $MOUNT_DIR ]]; then
 	    fi
 	fi
     fi
+    
+    if [[ ! -L $HOME/.jupyter/lab && -a $MOUNT_DIR ]]; then
+	if [[ ! -a $MOUNT_DIR/jupyter/lab ]]; then
+            mkdir -p $MOUNT_DIR/jupyter/lab
+	fi
+	[[ -a $HOME/.jupyter/lab ]] && mv $HOME/.jupyter/lab $HOME/.jupyter/lab.old
+	echo "$SN: linking: ln -s /opt/app-root/src/jupyter/lab ~/.jupyter/lab"
+	ln -s $MOUNT_DIR/jupyter/lab $HOME/.jupyter/lab
+    fi
+
+    if [[ -a $MOUNT_DIR/.myjupyter_start.sh ]]; then
+	echo "$SN: Found $MOUNT_DIR/.myjupyter_start.sh: sourcing it"
+	. $MOUNT_DIR/.myjupyter_start.sh
+    fi
 fi
 
 echo "$0: END"
