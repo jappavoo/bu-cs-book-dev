@@ -1,0 +1,14 @@
+# make lab
+# ./attachroot.sh
+# ran these to test
+apt-get install -y valgrind
+apt-get install -y libasan5
+apt-get install -y libubsan1
+#apt-cache search valgrind
+#apt-cache search sanitizer
+
+# test as user
+
+# update docker file
+
+# docker build  --rm --force-rm -t quay.io/jappavoo/ece440S22:v0 .
