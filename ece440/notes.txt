@@ -1,14 +1,18 @@
+# to explore what packages you want
 # make lab
 # ./attachroot.sh
 # ran these to test
-apt-get install -y valgrind
-apt-get install -y libasan5
-apt-get install -y libubsan1
+#apt-get install -y valgrind
+#apt-get install -y libasan5
+#apt-get install -y libubsan1
 #apt-cache search valgrind
 #apt-cache search sanitizer
 
 # test as user
 
 # update docker file
-
+# to build container
 # docker build  --rm --force-rm -t quay.io/jappavoo/ece440S22:v0 .
+
+# to run container
+#docker run -it --rm -p 8888:8888 -e JUPYTER_ENABLE_LAB=yes -v "/Users/jonathan":"/opt/app-root/src" -p 2222:22 quay.io/jappavoo/ece440S22:v0
