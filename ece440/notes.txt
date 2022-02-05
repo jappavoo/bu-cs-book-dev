@@ -15,4 +15,4 @@
 # docker build  --rm --force-rm -t quay.io/jappavoo/ece440S22:v0 .
 
 # to run container
-#docker run -it --rm -p 8888:8888 -e JUPYTER_ENABLE_LAB=yes -v "/Users/jonathan":"/opt/app-root/src" -p 2222:22 quay.io/jappavoo/ece440S22:v0
+#docker run -it --rm -p 8888:8888 -e JUPYTER_ENABLE_LAB=yes -v "/Users/jonathan":"/opt/app-root/src" -p 2222:22 quay.io/jappavoo/ece440s22:v0
