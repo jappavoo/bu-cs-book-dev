@@ -111,9 +111,4 @@ RUN rmdir ~/work
 # an opportunity to set things up based on dynamic facts such as user name
 COPY start-notebook.d /usr/local/bin/start-notebook.d
 
-### THIS IS A HACK - base stable is no longer supported so until we switch I cannot rebuild it
-### remove this and move back to base once we move forward to TAG=test
-USER root 
-RUN apt-get update && apt-get install -y valgrind libasan5 libubsan1
-
 USER $NB_USER
