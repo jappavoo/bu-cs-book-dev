@@ -1,5 +1,7 @@
 ARG VERSION
-FROM jappavoo/bu-cs-book-dev-base:${VERSION}
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}:${VERSION}
+#FROM jappavoo/bu-cs-book-dev-base:${VERSION}
 
 USER root
 

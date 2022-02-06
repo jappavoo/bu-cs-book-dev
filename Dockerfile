@@ -1,6 +1,8 @@
 ARG VERSION
-FROM jappavoo/bu-cs-book-dev-base-unmin:${VERSION}
- 
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}:${VERSION}
+#FROM jappavoo/bu-cs-book-dev-base-unmin:${VERSION}
+
 USER $NB_USER
 
 # If you do switch to root, always be sure to add a "USER $NB_USER" command at the end of the
@@ -108,3 +110,10 @@ RUN rmdir ~/work
 # and scripts in these directoreis are run automatically
 # an opportunity to set things up based on dynamic facts such as user name
 COPY start-notebook.d /usr/local/bin/start-notebook.d
+
+### THIS IS A HACK - base stable is no longer supported so until we switch I cannot rebuild it
+### remove this and move back to base once we move forward to TAG=test
+USER root 
+RUN apt-get update && apt-get install -y valgrind libasan5 libubsan1
+
+USER $NB_USER

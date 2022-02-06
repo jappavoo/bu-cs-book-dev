@@ -82,7 +82,7 @@ base-nb: PORT?=8888
 base-nb: ## start a jupyter classic notebook server container instance 
 	docker run -it --rm -p $(PORT):8888 $(DARGS) $(INAME):$(TAG) $(ARGS) 
 
-base-unmin-build: DARGS?=--build-arg VERSION=$(TAG)
+base-unmin-build: DARGS?=--build-arg BASE_IMAGE=$(IMAGE)-base --build-arg VERSION=$(TAG)
 base-unmin-build: INAME=$(IMAGE)-base-unmin
 base-unmin-build: ## Make the base-unmin image
 	docker build $(DARGS) $(DCACHING) --rm --force-rm -t $(INAME):$(TAG) base-unmin
@@ -118,7 +118,7 @@ base-unmin-nb: PORT?=8888
 base-unmin-nb: ## start a jupyter classic notebook server container instance 
 	docker run -it --rm -p $(PORT):8888 $(DARGS) $(INAME):$(TAG) $(ARGS) 
 
-build: DARGS?=--build-arg VERSION=$(TAG)
+build: DARGS?=--build-arg BASE_IMAGE=$(IMAGE)-base-unmin --build-arg VERSION=$(TAG)
 build: ## Make the latest build of the image
 	docker build $(DARGS) $(DCACHING) --rm --force-rm -t $(IMAGE):$(TAG) .
 
