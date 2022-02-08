@@ -89,6 +89,10 @@ RUN nbstripout --install --system
 RUN chgrp -R root /home/jovyan
 RUN chmod -R g+rX /home/jovyan
 
+# new versions of jupyter now start lab by default.  Forcing to start classic so that file relative paths in
+# notebooks will behave correctly when openned via the classic interface (used alot for RISE comptability)
+ENV DOCKER_STACKS_JUPYTER_CMD=notebook
+
 USER $NB_USER
 
 # turn off login messages and suppress sudo group check in /etc/bash.bashrc
