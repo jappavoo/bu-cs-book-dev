@@ -50,6 +50,7 @@ RUN conda install -c conda-forge jupyter_contrib_nbextensions
 
 # turn on spellchecker extension
 RUN jupyter nbextension enable spellchecker/main
+RUN pip install jupyterlab-spellchecker
 
 # enable split cell
 RUN jupyter nbextension enable splitcell/splitcell
@@ -88,10 +89,6 @@ RUN nbstripout --install --system
 # working on the moc
 RUN chgrp -R root /home/jovyan
 RUN chmod -R g+rX /home/jovyan
-
-# new versions of jupyter now start lab by default.  Forcing to start classic so that file relative paths in
-# notebooks will behave correctly when openned via the classic interface (used alot for RISE comptability)
-ENV DOCKER_STACKS_JUPYTER_CMD=notebook
 
 USER $NB_USER
 

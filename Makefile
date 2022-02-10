@@ -77,7 +77,7 @@ base-lab: ## start a jupyter lab notebook server container instance
 
 base-nb: INAME=$(IMAGE)-base
 base-nb: ARGS?=
-base-nb: DARGS?=-v "${HOST_DIR}":"${MOUNT_DIR}"
+base-nb: DARGS?=-e DOCKER_STACKS_JUPYTER_CMD=notebook -v "${HOST_DIR}":"${MOUNT_DIR}"
 base-nb: PORT?=8888
 base-nb: ## start a jupyter classic notebook server container instance 
 	docker run -it --rm -p $(PORT):8888 $(DARGS) $(INAME):$(TAG) $(ARGS) 
@@ -113,7 +113,7 @@ base-unmin-lab: ## start a jupyter lab notebook server container instance
 
 base-unmin-nb: INAME=$(IMAGE)-base-unmin
 base-unmin-nb: ARGS?=
-base-unmin-nb: DARGS?=-v "${HOST_DIR}":"${MOUNT_DIR}"
+base-unmin-nb: DARGS?=-e DOCKER_STACKS_JUPYTER_CMD=notebook  -v "${HOST_DIR}":"${MOUNT_DIR}"
 base-unmin-nb: PORT?=8888
 base-unmin-nb: ## start a jupyter classic notebook server container instance 
 	docker run -it --rm -p $(PORT):8888 $(DARGS) $(INAME):$(TAG) $(ARGS) 
@@ -145,7 +145,7 @@ lab: ## start a jupyter lab notebook server container instance
 #	docker run -it --privileged --rm -p $(PORT):8888 $(DARGS) $(IMAGE):$(TAG) $(ARGS)
 
 nb: ARGS?=
-nb: DARGS?=-v "${HOST_DIR}":"${MOUNT_DIR}" -p ${SSH_PORT}:22
+nb: DARGS?=-e DOCKER_STACKS_JUPYTER_CMD=notebook -v "${HOST_DIR}":"${MOUNT_DIR}" -p ${SSH_PORT}:22
 nb: PORT?=8888
 nb: ## start a jupyter classic notebook server container instance 
 	docker run -it --rm -p $(PORT):8888 $(DARGS) $(IMAGE):$(TAG) $(ARGS) 

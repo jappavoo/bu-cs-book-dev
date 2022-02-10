@@ -63,4 +63,21 @@ if [[ -d $MOUNT_DIR ]]; then
     fi
 fi
 
+# When running on JupyterHub we are forcing to start with classic notebook (we don't do these overrides if
+# you are running the container locally):
+# To ensure that classic mode relative path urls resolve correctly... this is not true if we
+# start lab first and then use the notebook interface.  However, if we start classic and then
+# relatives paths resolve correctly in both lab and classic notebook interfaces
+if [[ -n "${JUPYTERHUB_API_TOKEN}" ]]; then
+     if [[ "${cmd[1]}" == "lab" ]]; then
+	 cmd[1]=notebook
+	 echo "$SN: over riding : lab to notebook: ${cmd[@]}"
+     elif [[ ${cmd[1]} != "notebook" ]]; then
+	 # lab and notebook have not been specified
+	 # insert notebook so that default is overridden
+	 cmd=("${cmd[@]:0:1}" "notebook" "${cmd[@]:1}")
+	 echo "$SN: forcing : notebook: ${cmd[@]}"
+     fi
+fi
+echo "$SN: ${cmd[@]}: ${cmd[1]}"
 echo "$0: END"
