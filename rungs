@@ -1,0 +1,14 @@
+#!/bin/bash
+sub=$1
+image=${IMAGE:-quay.io/jappavoo/testgs:01}
+
+if [[ -z $sub ]]; then
+  echo "rungs <subpath>"
+  exit -1
+fi
+
+if [[ -n $INTERACTIVE ]]; then
+    docker run --rm -it -v $sub:/autograder/submission $image bash
+else
+    docker run --rm -v $sub:/autograder/submission $image bash -c "mkdir /autograder/results && /autograder/run_autograder && cat /autograder/results/results.json"
+fi
