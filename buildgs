@@ -1,1 +1,6 @@
-docker build --rm --force-rm -t quay.io/jappavoo/testgs:01 gradescope
+#!/bin/bash 
+
+name=$1
+if [[ -n $name ]]; then
+  docker build --rm --force-rm -t quay.io/jappavoo/$name gradescope
+fi

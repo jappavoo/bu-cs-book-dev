@@ -22,6 +22,8 @@ RUN apt-get install -y ascii2binary
 
 RUN dpkg --add-architecture i386 && apt-get -y update && apt-get install -y lib32gcc-9-dev libedit-dev:i386
 
+RUN apt-get update && apt-get install -y valgrind libasan5 libubsan1
+
 RUN apt-get update && \
     apt-get install -y dos2unix && \
     apt-get clean && rm -rf /var/lib/apt/lists/* /tmp/* /var/tmp/*

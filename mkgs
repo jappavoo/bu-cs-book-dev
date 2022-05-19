@@ -1,0 +1,15 @@
+#!/bin/bash
+image=${IMAGE:-quay.io/jappavoo/$1}
+
+if [[ -z $1 ]]; then
+  echo "rungs <image>"
+  exit -1
+fi
+
+if [[ ! -d gradescope ]]; then
+  echo "gradescope does not exist"
+  exit -1
+fi
+
+docker build -t $image gradescope
+
