@@ -1,5 +1,7 @@
 ARG BASE_VERSION
-FROM quay.io/thoth-station/s2i-minimal-f34-py39-notebook${BASE_VERSION}
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}${BASE_VERSION}
+#FROM quay.io/thoth-station/s2i-minimal-f34-py39-notebook${BASE_VERSION}
 
 # Add RUN statements to install packages as the $NB_USER defined in the base images.
 
@@ -15,7 +17,6 @@ USER root
 #  ssh
 #  vim 
 #  emacs
-#  joe
 #  6502 tool chain -- includes C compiler, assembler and a linker
 #  file utility -- guesses the type of content in a file -- standard unix tool
 #  man pages
@@ -24,7 +25,7 @@ USER root
 
 # build-essential
 RUN yum -y install texinfo ncurses-devel vim emacs-nox \
-    joe cc65 man-db man-pages bc xterm gdb cmake gcc-c++ && \
+    cc65 man-db man-pages bc xterm gdb cmake gcc-c++ && \
     yum update --assumeyes --nobest --setopt=tsflags=nodocs && \
     yum --assumeyes clean all && \
     rm -rf /var/cache/dnf

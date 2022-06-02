@@ -1,9 +1,16 @@
 # this was seeded from https://github.com/umsi-mads/education-notebook/blob/master/Makefile
-.PHONY: help build dev test test-env
+.PHONY: help build dev test test-env clean
 
+ARCH64VMTGZ=https://cs-web.bu.edu/~jappavoo/Resources/UC-SLS/aarch64vm.tgz
+
+#DOCKERSERVICE=
+DOCKERSERVICE?=quay.io/
 # Docker image name and tag=
-IMAGE:=jappavoo/bu-cs-book-dev
+IMAGE:=${DOCKERSERVICE}jappavoo/bu-cs-book-dev-fedora
 TAG?=latest
+# BASE_IMAGE
+BASE?=jupyter
+
 # our latest is built from a know stable base version
 BASE_STABLE_VERSION=@sha256:8dd0326cdb8f89dedd1a858ed7469fce77a84a444c2656f134896ab204491216
 # our testing version is built from the latest/bleeding edge version of the base image
@@ -22,13 +29,24 @@ help:
 # http://marmelab.com/blog/2016/02/29/auto-documented-makefile.html
 	@grep -E '^[a-zA-Z0-9_%/-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
-
-ifeq ($(TAG),latest)
-  BASE_VERSION=$(BASE_STABLE_VERSION)
+ifeq ($(BASE),jupyter)
+  BASE_IMAGE=thoth-station/s2i-minimal-f34-py39-notebook
+  ifeq ($(TAG),latest)
+    BASE_VERSION=$(BASE_STABLE_VERSION)
+  else
+    BASE_VERSION=$(BASE_TEST_VERSION)
+  endif
 else
-  BASE_VERSION=$(BASE_TEST_VERSION)
+  BASE_IMAGE=gradescope/auto-builds
+  BASE_VERSION=:ubuntu-20.04
+  IMAGE:=jappavoo/bu-cs-book-gradescope
 endif
-base-build: DARGS?=--build-arg BASE_VERSION=$(BASE_VERSION)
+
+base/aarch64vm/README.md:
+	cd base && wget -O - ${ARCH64VMTGZ} | tar -zxf -
+
+base-build: base/aarch64vm/README.md
+base-build: DARGS?=--build-arg BASE_IMAGE=$(BASE_IMAGE) --build-arg BASE_VERSION=$(BASE_VERSION)
 base-build: INAME=$(IMAGE)-base
 base-build: ## Make the base image
 	docker build $(DARGS) $(DCACHING) --rm --force-rm -t $(INAME):$(TAG) base
@@ -59,12 +77,12 @@ base-lab: ## start a jupyter lab notebook server container instance
 
 base-nb: INAME=$(IMAGE)-base
 base-nb: ARGS?=
-base-nb: DARGS?=-v "${HOST_DIR}":"${MOUNT_DIR}"
+base-nb: DARGS?=-e JUPYTER_ENABLE_LAB=no -v "${HOST_DIR}":"${MOUNT_DIR}"
 base-nb: PORT?=8888
 base-nb: ## start a jupyter classic notebook server container instance 
-	docker run -it --rm -p $(PORT):8888 $(DARGS) $(INAME):$(TAG) $(ARGS) 
+	docker run -it --rm -p $(PORT):8080 $(DARGS) $(INAME):$(TAG) $(ARGS) 
 
-base-unmin-build: DARGS?=--build-arg VERSION=$(TAG)
+base-unmin-build: DARGS?=--build-arg BASE_IMAGE=$(IMAGE)-base --build-arg VERSION=$(TAG)
 base-unmin-build: INAME=$(IMAGE)-base-unmin
 base-unmin-build: ## Make the base-unmin image
 	docker build $(DARGS) $(DCACHING) --rm --force-rm -t $(INAME):$(TAG) base-unmin
@@ -100,7 +118,7 @@ base-unmin-nb: PORT?=8888
 base-unmin-nb: ## start a jupyter classic notebook server container instance 
 	docker run -it --rm -p $(PORT):8888 $(DARGS) $(INAME):$(TAG) $(ARGS) 
 
-build: DARGS?=--build-arg VERSION=$(TAG)
+build: DARGS?=--build-arg BASE_IMAGE=$(IMAGE)-base-unmin --build-arg VERSION=$(TAG)
 build: ## Make the latest build of the image
 	docker build $(DARGS) $(DCACHING) --rm --force-rm -t $(IMAGE):$(TAG) .
 
@@ -122,8 +140,9 @@ jovyan: ## start container with root shell to do admin and poke around
 lab: ARGS?=
 lab: DARGS?=-e JUPYTER_ENABLE_LAB=yes -v "${HOST_DIR}":"${MOUNT_DIR}" -p ${SSH_PORT}:22
 lab: PORT?=8888
-lab: ## start a jupyter lab notebook server container instance 
+lab: ## start a jupyter lab notebook server container instance
 	docker run -it --rm -p $(PORT):8888 $(DARGS) $(IMAGE):$(TAG) $(ARGS)
+#	docker run -it --privileged --rm -p $(PORT):8888 $(DARGS) $(IMAGE):$(TAG) $(ARGS)
 
 nb: ARGS?=
 nb: DARGS?=-v "${HOST_DIR}":"${MOUNT_DIR}" -p ${SSH_PORT}:22
@@ -131,3 +150,5 @@ nb: PORT?=8888
 nb: ## start a jupyter classic notebook server container instance 
 	docker run -it --rm -p $(PORT):8888 $(DARGS) $(IMAGE):$(TAG) $(ARGS) 
 
+clean:
+	rm -rf $(wildcard base/aarch64vm base/aarch64vm.tgz)

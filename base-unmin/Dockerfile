@@ -1,10 +1,11 @@
 ARG VERSION
-FROM jappavoo/bu-cs-book-dev-base:${VERSION}
+ARG BASE_IMAGE
+FROM ${BASE_IMAGE}:${VERSION}
 
 USER root
 
-# turned off for the moment to minimize size
-# we want the container to feel more like a fully fledged system so we are pulling the trigger and unminimizing it
-RUN yes | unminimize || true
+# from http://docs.projectatomic.io/container-best-practices/
+RUN [ -e /etc/dnf/dnf.conf ] && sed -i '/tsflags=nodocs/d' /etc/dnf/dnf.conf || true
+RUN dnf -y reinstall "*"
 
 USER 1001
