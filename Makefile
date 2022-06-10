@@ -6,7 +6,7 @@ ARCH64VMTGZ=https://cs-web.bu.edu/~jappavoo/Resources/UC-SLS/aarch64vm.tgz
 #DOCKERSERVICE=
 DOCKERSERVICE?=quay.io/
 # Docker image name and tag=
-IMAGE:=${DOCKERSERVICE}jappavoo/bu-cs-book-dev-fedora
+IMAGE:=${DOCKERSERVICE}rh_ee_adhayala/bu-cs-book-dev-fedora
 TAG?=latest
 # BASE_IMAGE
 BASE?=jupyter
@@ -30,7 +30,7 @@ help:
 	@grep -E '^[a-zA-Z0-9_%/-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 ifeq ($(BASE),jupyter)
-  BASE_IMAGE=thoth-station/s2i-minimal-f34-py39-notebook
+  BASE_IMAGE=rh_ee_adhayala/s2i-minimal-f34-py39-notebook
   ifeq ($(TAG),latest)
     BASE_VERSION=$(BASE_STABLE_VERSION)
   else
@@ -39,7 +39,7 @@ ifeq ($(BASE),jupyter)
 else
   BASE_IMAGE=gradescope/auto-builds
   BASE_VERSION=:ubuntu-20.04
-  IMAGE:=jappavoo/bu-cs-book-gradescope
+  IMAGE:=rh_ee_adhayala/bu-cs-book-gradescope
 endif
 
 base/aarch64vm/README.md:
@@ -136,7 +136,7 @@ jovyan: DARGS?=
 jovyan: ## start container with root shell to do admin and poke around
 	docker run -it --rm $(DARGS) $(IMAGE):$(TAG) $(ARGS)
 
-#docker run --rm -e JUPYTER_ENABLE_LAB=yes -p 8888:8888 -v "${HOME}":/home/jovyan/work  jappavoo/bu-cs-book-dev:latest
+#docker run --rm -e JUPYTER_ENABLE_LAB=yes -p 8888:8888 -v "${HOME}":/home/jovyan/work  rh_ee_adhayala/bu-cs-book-dev:latest
 lab: ARGS?=
 lab: DARGS?=-e JUPYTER_ENABLE_LAB=yes -v "${HOST_DIR}":"${MOUNT_DIR}" -p ${SSH_PORT}:22
 lab: PORT?=8888
