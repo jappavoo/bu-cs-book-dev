@@ -70,15 +70,16 @@ base-jovyan: ## start container with root shell to do admin and poke around
 
 base-lab: INAME=$(IMAGE)-base
 base-lab: ARGS?=
-base-lab: DARGS?=-e JUPYTER_ENABLE_LAB=yes -v "${HOST_DIR}":"${MOUNT_DIR}"
+base-lab: DARGS?= -e JUPYTER_ENABLE_LAB=yes -v "${HOST_DIR}":"${MOUNT_DIR}" 
+#base-lab: DARGS?= -e JUPYTER_ENABLE_LAB=yes
 base-lab: PORT?=8888
 base-lab: ## start a jupyter lab notebook server container instance 
 	docker run -it --rm -p $(PORT):8888 $(DARGS) $(INAME):$(TAG) $(ARGS)
 
 base-nb: INAME=$(IMAGE)-base
 base-nb: ARGS?=
-base-nb: DARGS?=-e JUPYTER_ENABLE_LAB=no -v "${HOST_DIR}":"${MOUNT_DIR}"
-base-nb: PORT?=8888
+base-nb: DARGS?=-e JUPYTER_ENABLE_LAB=no -v "${HOST_DIR}":"${MOUNT_DIR}" 
+base-nb: PORT?=8080
 base-nb: ## start a jupyter classic notebook server container instance 
 	docker run -it --rm -p $(PORT):8080 $(DARGS) $(INAME):$(TAG) $(ARGS) 
 
@@ -106,17 +107,17 @@ base-unmin-jovyan: ## start container with root shell to do admin and poke aroun
 
 base-unmin-lab: INAME=$(IMAGE)-base-unmin
 base-unmin-lab: ARGS?=
-base-unmin-lab: DARGS?=-e JUPYTER_ENABLE_LAB=yes -v "${HOST_DIR}":"${MOUNT_DIR}"
+base-unmin-lab: DARGS?=-e JUPYTER_ENABLE_LAB=yes -v "${HOST_DIR}":"${MOUNT_DIR}" 
 base-unmin-lab: PORT?=8888
 base-unmin-lab: ## start a jupyter lab notebook server container instance 
 	docker run -it --rm -p $(PORT):8888 $(DARGS) $(INAME):$(TAG) $(ARGS)
 
 base-unmin-nb: INAME=$(IMAGE)-base-unmin
 base-unmin-nb: ARGS?=
-base-unmin-nb: DARGS?=-v "${HOST_DIR}":"${MOUNT_DIR}"
-base-unmin-nb: PORT?=8888
+base-unmin-nb: DARGS?=-e JUPYTER_ENABLE_LAB=no -v "${HOST_DIR}":"${MOUNT_DIR}" 
+base-unmin-nb: PORT?=8080
 base-unmin-nb: ## start a jupyter classic notebook server container instance 
-	docker run -it --rm -p $(PORT):8888 $(DARGS) $(INAME):$(TAG) $(ARGS) 
+	docker run -it --rm -p $(PORT):8080 $(DARGS) $(INAME):$(TAG) $(ARGS) 
 
 build: DARGS?=--build-arg BASE_IMAGE=$(IMAGE)-base-unmin --build-arg VERSION=$(TAG)
 build: ## Make the latest build of the image
