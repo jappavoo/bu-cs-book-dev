@@ -41,5 +41,11 @@ RUN cd /tmp && wget https://github.com/dungeons-of-moria/umoria/archive/refs/tag
 
 ENV PATH=$PATH:/opt/umoria
 
+# Changes made from June - Abirami
+
+RUN yum -y install openssh joe strace bison flex openssl-devel elfutils-libelf \
+    nasm socat rlwrap qemu-system-aarch64 libgcc.i686 libedit-devel.i686 libbsd
+
+# End 
 # adding 
 USER 1001
