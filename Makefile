@@ -6,7 +6,7 @@ ARCH64VMTGZ=https://cs-web.bu.edu/~jappavoo/Resources/UC-SLS/aarch64vm.tgz
 DOCKERSERVICE?=quay.io/
 BASE_SERVICE?=quay.io/
 # Docker image name and tag=
-IMAGE:=${DOCKERSERVICE}japavoo/bu-cs-book-dev-fedora
+IMAGE:=${DOCKERSERVICE}jappavoo/bu-cs-book-dev-fedora
 TAG?=latest
 # BASE_IMAGE
 BASE?=jupyter
@@ -74,14 +74,14 @@ base-lab: DARGS?= -e JUPYTER_ENABLE_LAB=yes -v "${HOST_DIR}":"${MOUNT_DIR}"
 #base-lab: DARGS?= -e JUPYTER_ENABLE_LAB=yes
 base-lab: PORT?=8888
 base-lab: ## start a jupyter lab notebook server container instance 
-	docker run -it --rm -p $(PORT):8888 $(DARGS) $(INAME):$(TAG) $(ARGS)
+	docker run -it --rm -p $(PORT):$(PORT) $(DARGS) $(INAME):$(TAG) $(ARGS)
 
 base-nb: INAME=$(IMAGE)-base
 base-nb: ARGS?=
-base-nb: DARGS?=-e JUPYTER_ENABLE_LAB=no -v "${HOST_DIR}":"${MOUNT_DIR}" 
+base-nb: DARGS?=-e JUPYTER_ENABLE_LAB=0  -v "${HOST_DIR}":"${MOUNT_DIR}" 
 base-nb: PORT?=8080
 base-nb: ## start a jupyter classic notebook server container instance 
-	docker run -it --rm -p $(PORT):8080 $(DARGS) $(INAME):$(TAG) $(ARGS) 
+	docker run -it --rm -p $(PORT):$(PORT) $(DARGS) $(INAME):$(TAG) $(ARGS) 
 
 base-unmin-build: DARGS?=--build-arg BASE_IMAGE=$(IMAGE)-base --build-arg VERSION=$(TAG)
 base-unmin-build: INAME=$(IMAGE)-base-unmin
@@ -110,14 +110,14 @@ base-unmin-lab: ARGS?=
 base-unmin-lab: DARGS?=-e JUPYTER_ENABLE_LAB=yes -v "${HOST_DIR}":"${MOUNT_DIR}" 
 base-unmin-lab: PORT?=8888
 base-unmin-lab: ## start a jupyter lab notebook server container instance 
-	docker run -it --rm -p $(PORT):8888 $(DARGS) $(INAME):$(TAG) $(ARGS)
+	docker run -it --rm -p $(PORT):$(PORT) $(DARGS) $(INAME):$(TAG) $(ARGS)
 
 base-unmin-nb: INAME=$(IMAGE)-base-unmin
 base-unmin-nb: ARGS?=
-base-unmin-nb: DARGS?=-e JUPYTER_ENABLE_LAB=no -v "${HOST_DIR}":"${MOUNT_DIR}" 
+base-unmin-nb: DARGS?=-e -e JUPYTER_ENABLE_LAB=0  -v "${HOST_DIR}":"${MOUNT_DIR}" 
 base-unmin-nb: PORT?=8080
 base-unmin-nb: ## start a jupyter classic notebook server container instance 
-	docker run -it --rm -p $(PORT):8080 $(DARGS) $(INAME):$(TAG) $(ARGS) 
+	docker run -it --rm -p $(PORT):$(PORT) $(DARGS) $(INAME):$(TAG) $(ARGS) 
 
 build: DARGS?=--build-arg BASE_IMAGE=$(IMAGE)-base-unmin --build-arg VERSION=$(TAG)
 build: ## Make the latest build of the image
@@ -142,14 +142,14 @@ lab: ARGS?=
 lab: DARGS?=--user $(shell id -u) -v "${SSH_AUTH_SOCK}":"${SSH_AUTH_SOCK}" -e SSH_AUTH_SOCK=${SSH_AUTH_SOCK}  -e JUPYTER_ENABLE_LAB=yes -v "${HOST_DIR}":"${MOUNT_DIR}" -p ${SSH_PORT}:22
 lab: PORT?=8888
 lab: ## start a jupyter lab notebook server container instance
-	docker run -it --rm -p $(PORT):8888 $(DARGS) $(IMAGE):$(TAG) $(ARGS)
+	docker run -it --rm -p $(PORT):$(PORT) $(DARGS) $(IMAGE):$(TAG) $(ARGS)
 #	docker run -it --privileged --rm -p $(PORT):8888 $(DARGS) $(IMAGE):$(TAG) $(ARGS)
 
 nb: ARGS?=
-nb: DARGS?=--user $(shell id -u) -v "${SSH_AUTH_SOCK}":"${SSH_AUTH_SOCK}" -e SSH_AUTH_SOCK=${SSH_AUTH_SOCK} -v "${HOST_DIR}":"${MOUNT_DIR}" -p ${SSH_PORT}:22
-nb: PORT?=8888
+nb: DARGS?=--user $(shell id -u) -v "${SSH_AUTH_SOCK}":"${SSH_AUTH_SOCK}" -e JUPYTER_ENABLE_LAB=0 -e SSH_AUTH_SOCK=${SSH_AUTH_SOCK} -v "${HOST_DIR}":"${MOUNT_DIR}" -p ${SSH_PORT}:22
+nb: PORT?=8080
 nb: ## start a jupyter classic notebook server container instance 
-	docker run -it --rm -p $(PORT):8888 $(DARGS) $(IMAGE):$(TAG) $(ARGS) 
+	docker run -it --rm -p $(PORT):$(PORT) $(DARGS) $(IMAGE):$(TAG) $(ARGS) 
 
 clean:
 	rm -rf $(wildcard base/aarch64vm base/aarch64vm.tgz)
