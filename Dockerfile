@@ -1,7 +1,7 @@
 ARG VERSION
 ARG BASE_IMAGE
-FROM quay.io/rh_ee_adhayala/bu-cs-book-dev-fedora-base-unmin:latest
-#FROM ${BASE_IMAGE}/${VERSION}
+#FROM quay.io/rh_ee_adhayala/bu-cs-book-dev-fedora-base-unmin:latest
+FROM ${BASE_IMAGE}:${VERSION}
 #FROM rh_ee_adhayala/bu-cs-book-dev-fedora-base:${VERSION}
  
 USER 1001

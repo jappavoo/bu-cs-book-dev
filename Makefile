@@ -2,11 +2,11 @@
 .PHONY: help build dev test test-env clean
 
 ARCH64VMTGZ=https://cs-web.bu.edu/~jappavoo/Resources/UC-SLS/aarch64vm.tgz
-
 #DOCKERSERVICE=
 DOCKERSERVICE?=quay.io/
+BASE_SERVICE?=quay.io/
 # Docker image name and tag=
-IMAGE:=${DOCKERSERVICE}rh_ee_adhayala/bu-cs-book-dev-fedora
+IMAGE:=${DOCKERSERVICE}japavoo/bu-cs-book-dev-fedora
 TAG?=latest
 # BASE_IMAGE
 BASE?=jupyter
@@ -30,7 +30,7 @@ help:
 	@grep -E '^[a-zA-Z0-9_%/-]+:.*?## .*$$' $(MAKEFILE_LIST) | sort | awk 'BEGIN {FS = ":.*?## "}; {printf "\033[36m%-30s\033[0m %s\n", $$1, $$2}'
 
 ifeq ($(BASE),jupyter)
-  BASE_IMAGE=rh_ee_adhayala/s2i-minimal-f34-py39-notebook
+  BASE_IMAGE=$(BASE_SERVICE)thoth-station/s2i-minimal-f34-py39-notebook
   ifeq ($(TAG),latest)
     BASE_VERSION=$(BASE_STABLE_VERSION)
   else
@@ -139,14 +139,14 @@ jovyan: ## start container with root shell to do admin and poke around
 
 #docker run --rm -e JUPYTER_ENABLE_LAB=yes -p 8888:8888 -v "${HOME}":/home/jovyan/work  rh_ee_adhayala/bu-cs-book-dev:latest
 lab: ARGS?=
-lab: DARGS?=-e JUPYTER_ENABLE_LAB=yes -v "${HOST_DIR}":"${MOUNT_DIR}" -p ${SSH_PORT}:22
+lab: DARGS?=--user $(shell id -u) -v "${SSH_AUTH_SOCK}":"${SSH_AUTH_SOCK}" -e SSH_AUTH_SOCK=${SSH_AUTH_SOCK}  -e JUPYTER_ENABLE_LAB=yes -v "${HOST_DIR}":"${MOUNT_DIR}" -p ${SSH_PORT}:22
 lab: PORT?=8888
 lab: ## start a jupyter lab notebook server container instance
 	docker run -it --rm -p $(PORT):8888 $(DARGS) $(IMAGE):$(TAG) $(ARGS)
 #	docker run -it --privileged --rm -p $(PORT):8888 $(DARGS) $(IMAGE):$(TAG) $(ARGS)
 
 nb: ARGS?=
-nb: DARGS?=-v "${HOST_DIR}":"${MOUNT_DIR}" -p ${SSH_PORT}:22
+nb: DARGS?=--user $(shell id -u) -v "${SSH_AUTH_SOCK}":"${SSH_AUTH_SOCK}" -e SSH_AUTH_SOCK=${SSH_AUTH_SOCK} -v "${HOST_DIR}":"${MOUNT_DIR}" -p ${SSH_PORT}:22
 nb: PORT?=8888
 nb: ## start a jupyter classic notebook server container instance 
 	docker run -it --rm -p $(PORT):8888 $(DARGS) $(IMAGE):$(TAG) $(ARGS) 
