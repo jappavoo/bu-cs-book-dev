@@ -42,6 +42,9 @@ else
   IMAGE:=rh_ee_adhayala/bu-cs-book-gradescope
 endif
 
+base/docker-stacks/base-notebook/start.sh:
+	cd base && git clone git@github.com:jupyter/docker-stacks.git
+
 base/aarch64vm/README.md:
 	cd base && wget -O - ${ARCH64VMTGZ} | tar -zxf -
 
@@ -70,7 +73,7 @@ base-jovyan: ## start container with root shell to do admin and poke around
 
 base-lab: INAME=$(IMAGE)-base
 base-lab: ARGS?=
-base-lab: DARGS?= -e JUPYTER_ENABLE_LAB=yes -v "${HOST_DIR}":"${MOUNT_DIR}" 
+base-lab: DARGS?=--user $(shell id -u)  -e JUPYTER_ENABLE_LAB=yes -v "${HOST_DIR}":"${MOUNT_DIR}" 
 #base-lab: DARGS?= -e JUPYTER_ENABLE_LAB=yes
 base-lab: PORT?=8888
 base-lab: ## start a jupyter lab notebook server container instance 
@@ -78,7 +81,7 @@ base-lab: ## start a jupyter lab notebook server container instance
 
 base-nb: INAME=$(IMAGE)-base
 base-nb: ARGS?=
-base-nb: DARGS?=-e JUPYTER_ENABLE_LAB=0  -v "${HOST_DIR}":"${MOUNT_DIR}" 
+base-nb: DARGS?=--user $(shell id -u)  -e JUPYTER_ENABLE_LAB=0  -v "${HOST_DIR}":"${MOUNT_DIR}" 
 base-nb: PORT?=8080
 base-nb: ## start a jupyter classic notebook server container instance 
 	docker run -it --rm -p $(PORT):$(PORT) $(DARGS) $(INAME):$(TAG) $(ARGS) 
@@ -107,14 +110,14 @@ base-unmin-jovyan: ## start container with root shell to do admin and poke aroun
 
 base-unmin-lab: INAME=$(IMAGE)-base-unmin
 base-unmin-lab: ARGS?=
-base-unmin-lab: DARGS?=-e JUPYTER_ENABLE_LAB=yes -v "${HOST_DIR}":"${MOUNT_DIR}" 
+base-unmin-lab: DARGS?=--user $(shell id -u) -e JUPYTER_ENABLE_LAB=yes -v "${HOST_DIR}":"${MOUNT_DIR}" 
 base-unmin-lab: PORT?=8888
 base-unmin-lab: ## start a jupyter lab notebook server container instance 
 	docker run -it --rm -p $(PORT):$(PORT) $(DARGS) $(INAME):$(TAG) $(ARGS)
 
 base-unmin-nb: INAME=$(IMAGE)-base-unmin
 base-unmin-nb: ARGS?=
-base-unmin-nb: DARGS?=-e -e JUPYTER_ENABLE_LAB=0  -v "${HOST_DIR}":"${MOUNT_DIR}" 
+base-unmin-nb: DARGS?=--user $(shell id -u)  -e JUPYTER_ENABLE_LAB=0  -v "${HOST_DIR}":"${MOUNT_DIR}" 
 base-unmin-nb: PORT?=8080
 base-unmin-nb: ## start a jupyter classic notebook server container instance 
 	docker run -it --rm -p $(PORT):$(PORT) $(DARGS) $(INAME):$(TAG) $(ARGS) 
@@ -146,7 +149,7 @@ lab: ## start a jupyter lab notebook server container instance
 #	docker run -it --privileged --rm -p $(PORT):8888 $(DARGS) $(IMAGE):$(TAG) $(ARGS)
 
 nb: ARGS?=
-nb: DARGS?=--user $(shell id -u) -v "${SSH_AUTH_SOCK}":"${SSH_AUTH_SOCK}" -e JUPYTER_ENABLE_LAB=0 -e SSH_AUTH_SOCK=${SSH_AUTH_SOCK} -v "${HOST_DIR}":"${MOUNT_DIR}" -p ${SSH_PORT}:22
+nb: DARGS?=--user $(shell id -u)  -v "${SSH_AUTH_SOCK}":"${SSH_AUTH_SOCK}" -e JUPYTER_ENABLE_LAB=0 -e SSH_AUTH_SOCK=${SSH_AUTH_SOCK} -v "${HOST_DIR}":"${MOUNT_DIR}" -p ${SSH_PORT}:22
 nb: PORT?=8080
 nb: ## start a jupyter classic notebook server container instance 
 	docker run -it --rm -p $(PORT):$(PORT) $(DARGS) $(IMAGE):$(TAG) $(ARGS) 

@@ -1,7 +1,6 @@
 ARG BASE_VERSION
 ARG BASE_IMAGE
 FROM ${BASE_IMAGE}${BASE_VERSION}
-#FROM quay.io/thoth-station/s2i-minimal-f34-py39-notebook${BASE_VERSION}
 
 # Add RUN statements to install packages as the $NB_USER defined in the base images.
 
@@ -46,6 +45,51 @@ ENV PATH=$PATH:/opt/umoria
 RUN yum -y install openssh joe strace bison flex openssl-devel elfutils-libelf \
     nasm socat rlwrap qemu-system-aarch64 libgcc.i686 libedit-devel.i686 libbsd
 
+
+######### JA HACKERY #############
+
+# simulate jupyter stacks user model so that we can get a dummy home directory setup
+# see https://github.com/jupyter/docker-stacks/blob/master/base-notebook/Dockerfile
+ARG NB_USER="jovyan"
+ARG NB_UID="1000"
+ARG NB_GID="100"
+
+# Configure environment
+ENV NB_USER="${NB_USER}" \
+    NB_UID=${NB_UID} \
+    NB_GID=${NB_GID} \
+    HOME="/home/${NB_USER}"
+
+RUN  useradd -l -m -s /bin/bash -N -u "${NB_UID}" "${NB_USER}" && \
+    chmod g+w /etc/passwd && \
+    fix-permissions "${HOME}"
+
+USER ${NB_UID}
+
+# Setup work directory for backward-compatibility
+#RUN mkdir "/home/${NB_USER}/work" && \
+#    fix-permissions "/home/${NB_USER}"
+
+USER root
+
+# adding jupyter stacks style startup hook
+COPY docker-stacks/base-notebook/start.sh /tmp/start.sh
+RUN  mkdir /opt/app-root/jupyter-stacks && sed 's/^    exec.*/      _log "JA-OK: removed exec"/g' /tmp/start.sh > /opt/app-root/jupyter-stacks/start.sh
+
+#COPY start-notebook.d /usr/local/bin/start-notebook.d
+
+# add jupyter stacks hook calls as needed
+RUN  [[ -a /opt/app-root/bin/setup-environ.sh ]] && echo ". /opt/app-root/jupyter-stacks/start.sh"  >>  /opt/app-root/bin/setup-environ.sh
+
+#### ADD ARM development environment in /home
+# copy aarch64vm into the image
+COPY aarch64vm /home/aarch64vm
+
+RUN chown -R jovyan /home/aarch64vm
+RUN chgrp -R root /home/aarch64vm && chmod -R g+rX /home/aarch64vm && chmod g+w /home/aarch64vm && chmod g+w /home/aarch64vm/*
+
 # End 
 # adding 
 USER 1001
+
+WORKDIR "${HOME}"

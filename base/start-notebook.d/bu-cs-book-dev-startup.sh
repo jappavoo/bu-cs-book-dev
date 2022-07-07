@@ -4,8 +4,6 @@ SN=bu-cs-book-dev-startup.sh
 [[ -z $MOUNT_DIR ]] && export MOUNT_DIR=/opt/app-root/src
 
 # this script is designed to be run by the jupyter stack /usr/local/bin/start.sh
-# As per the standard jupyter startup scripts we use the following test to
-# figure out if we have been started in a jupyterhub env
 echo "$SN: BEGIN: $(id -a)"
 
 if [[ -d $MOUNT_DIR ]]; then
@@ -36,8 +34,32 @@ if [[ -d $MOUNT_DIR ]]; then
 	fi
 	if [[ -d $MOUNT_DIR/$DIR ]]; then
 	    echo "$SN: Linking $MOUNT_DIR/$DIR -> $HOME/$DIR"
-	    ln -s $MOUNT_DIR/$DIR $HOME/$DIR
+	    ln -s $MOUNT_DIR/$DIR $HOME/$DIR	    
+	    if [[ $DIR = .ssh ]]; then
+		# As per the standard jupyter startup scripts we use the following test to
+		# figure out if we have been started in a jupyterhub env
+		if [[ -n "${JUPYTERHUB_API_TOKEN}" ]]; then
+		    # during jupyter stacks startup logic "fixes permissions" on home directories
+		    # this causes group permissions to be set.  We undo this with a hammer on .ssh
+ 		    echo "$SN: Fixing permissions in  $HOME/$DIR"
+		    chmod -R go-rwxs $HOME/$DIR
+	        fi
+	    fi
 	fi
+    fi
+    
+    if [[ ! -L $HOME/.jupyter/lab && -a $MOUNT_DIR ]]; then
+	if [[ ! -a $MOUNT_DIR/jupyter/lab ]]; then
+            mkdir -p $MOUNT_DIR/jupyter/lab
+	fi
+	[[ -a $HOME/.jupyter/lab ]] && mv $HOME/.jupyter/lab $HOME/.jupyter/lab.old
+	echo "$SN: linking: ln -s /opt/app-root/src/jupyter/lab ~/.jupyter/lab"
+	ln -s $MOUNT_DIR/jupyter/lab $HOME/.jupyter/lab
+    fi
+
+    if [[ -a $MOUNT_DIR/.myjupyter_start.sh ]]; then
+	echo "$SN: Found $MOUNT_DIR/.myjupyter_start.sh: sourcing it"
+	. $MOUNT_DIR/.myjupyter_start.sh
     fi
 fi
 
